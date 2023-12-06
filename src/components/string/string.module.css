@@ -1,0 +1,12 @@
+.pageContent{
+
+}
+.inputRow{
+    display:flex;
+    flex-direction:row;
+}
+.circlesGrid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+}
