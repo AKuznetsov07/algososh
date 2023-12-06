@@ -15,9 +15,9 @@ export const StringComponent: React.FC = () => {
     const wait = (delay: number, ...args: any[]) => new Promise(resolve => setTimeout(resolve, delay, ...args));
     //stringCirclesPropsList: Array<CircleProps>;
     const [value, setValue] = React.useState<{ inputStr: string, stringCirclesPropsList: Array<CircleProps> }>({ inputStr: "", stringCirclesPropsList :[]});
-    const circlesPropsList = useAppSelector(
-        (store) => store.stringPage.stringCirclesPropsList
-    );
+    //const circlesPropsList = useAppSelector(
+    //    (store) => store.stringPage.stringCirclesPropsList
+    //);
 
     const handleTurnAroundClick = (event: MouseEvent<HTMLButtonElement>) => {
         //dispatch(animateStringReverseAction(value))
@@ -86,8 +86,6 @@ export const StringComponent: React.FC = () => {
                 setValue({ ...value, stringCirclesPropsList: stringCircles });
             }
         }
-
-
     }
 
 
