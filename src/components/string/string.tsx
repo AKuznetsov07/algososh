@@ -99,7 +99,6 @@ export const StringComponent: React.FC = () => {
                   <Input maxLength={11} isLimitText={true} value={value.inputStr} onChange={onValueChange}></Input>
                   <Button text="Развернуть" onClick={handleTurnAroundClick}></Button>
               </div>
-              <p></p>
           </div>
           <div className={`${styles.circlesGrid}`}>
               {value.stringCirclesPropsList.map((circlesProps) => (

@@ -1,0 +1,11 @@
+
+.columnsGrid {
+    display: grid;
+    grid-template-columns: repeat(17, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    align-items:end;
+}
+.inputRow {
+    display: flex;
+    flex-direction: row;
+}

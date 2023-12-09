@@ -65,7 +65,6 @@ export const FibonacciPage: React.FC = () => {
                     <Input max={maxValue} type="number" isLimitText={true} value={value.inputInt} onChange={onValueChange}></Input>
                     <Button text="Развернуть" onClick={handleCountFibClick}></Button>
                 </div>
-                <p></p>
             </div>
             <div className={`${styles.circlesGrid}`}>
                 {value.fibCirclesPropsList.map((circlesProps) => (
