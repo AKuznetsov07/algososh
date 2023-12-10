@@ -81,3 +81,121 @@ export class Queue<T> {
         }
     }
 }
+
+export class Node<T> {
+    value: T
+    next: Node<T> | null
+    constructor(value: T, next?: Node<T> | null) {
+        this.value = value;
+        this.next = (next === undefined ? null : next);
+    }
+}
+export class LinkedList<T> {
+    private head: Node<T> | null;
+    private size: number;
+    constructor() {
+        this.head = null;
+        this.size = 0;
+    }
+
+    getAt(index: number) {
+        if (index < 0 || index > this.size) {
+            console.log('Enter a valid index');
+            return null;
+        }
+        let indCounter = 0;
+        let result = this.head;
+        while (result && indCounter !== index) {
+            indCounter++;
+            result = result.next;
+        }
+        return result;
+    }
+
+    insertAt(elementData: T, index: number) {
+        if (index < 0 || index > this.size) {
+            console.log('Enter a valid index');
+            return;
+        } else {
+            const newNode = new Node(elementData);
+
+            if (index === 0) {
+                newNode.next = this.head;
+                this.head = newNode;
+                this.size++;
+            } else {
+                //let curr = this.head;
+                //let currIndex = 0;
+
+                //for (currIndex; currIndex < index - 1; currIndex++) {
+                //    if (curr === null) {
+                //        console.log('Enter a valid index');
+                //        return;
+                //    }
+                //    curr = curr.next;
+                //}
+                //// перебрать элементы в списке до нужной позиции
+                //// ваш код ...
+
+                //if (curr === null) {
+                //    console.log('Enter a valid index');
+                //    return;
+                //}
+                //node.next = curr.next;
+                //curr.next = node;
+                //// добавить элемент
+                //// ваш код ...
+                const prev = this.getAt(index - 1);
+                if (prev) {
+                    const temp = prev.next;
+                    newNode.next = temp;
+                    prev.next = newNode;
+                    this.size++;
+                }
+            }
+        }
+    }
+
+    removeAt(index: number) {
+        if (this.size && this.head && this.size > index) {
+            if (index === 0) {
+                this.head = this.head.next;
+                this.size--;
+            }
+            else {
+                const prev = this.getAt(index - 1);
+                if (prev) {//вообще 100% не может быть нулл, если нигде не проглядел.
+                    const next = prev.next !== null ? prev.next.next:null;
+                    prev.next = next;
+                    this.size--;
+                }
+            }
+        }
+    }
+    addHead(elementData: T) {
+        this.insertAt(elementData,0)
+    }
+    addTail(elementData: T) {
+        this.insertAt(elementData, this.size)
+    }
+    removeHead() {
+        this.removeAt(0)
+    }
+    removeTail() {
+        this.removeAt(this.size-1)
+    }
+
+    getSize() {
+        return this.size;
+    }
+
+    //print() {
+    //    let curr = this.head;
+    //    let res = '';
+    //    while (curr) {
+    //        res += `${curr.value} `;
+    //        curr = curr.next;
+    //    }
+    //    console.log(res);
+    //}
+}
