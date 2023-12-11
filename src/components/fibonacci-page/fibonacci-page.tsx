@@ -5,22 +5,16 @@ import { Button } from "../ui/button/button";
 import { Circle, CircleProps } from "../ui/circle/circle";
 import styles from "./fibonacci-page.module.css";
 import { v4 as uuidv4 } from "uuid";
+import { wait } from "../../utils/utils";
+import { NORMAL_DELAY } from "../../utils/constants";
 
 export const FibonacciPage: React.FC = () => {
     const maxValue = 19;
-    const wait = (delay: number, ...args: any[]) => new Promise(resolve => setTimeout(resolve, delay, ...args));
     const [value, setValue] = React.useState<{ inputInt: number | undefined, fibCirclesPropsList: Array<CircleProps> }>({ inputInt: undefined, fibCirclesPropsList: [] });
 
 
     const handleCountFibClick = (event: MouseEvent<HTMLButtonElement>) => {
-        //for (let i = 0; i <= value.inputInt; i++) {
-
-        //}
         if (value.inputInt) {
-            //for (let i = 0; i <= value.inputInt; i++) {
-            //    drawNumber(i);
-            //    //await wait(1000);
-            //}
             drawNumber(value.inputInt);
         }
     };
@@ -36,7 +30,7 @@ export const FibonacciPage: React.FC = () => {
             };
             newList = [...newList, newCircleState]
             setValue({ ...value, fibCirclesPropsList: newList });
-            await wait(1000);
+            await wait(NORMAL_DELAY);
         }
     }
 
@@ -56,7 +50,6 @@ export const FibonacciPage: React.FC = () => {
         if (newValue >= 0 && newValue <= maxValue) {
             setValue({ ...value, inputInt: newValue });
         }
-        //
     };
     return (
         <SolutionLayout title="Последовательность Фибоначчи">

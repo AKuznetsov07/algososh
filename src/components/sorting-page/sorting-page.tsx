@@ -7,19 +7,13 @@ import { Column, ColumnProps } from "../ui/column/column";
 import { ElementStates } from "../../types/element-states";
 import { v4 as uuidv4 } from "uuid";
 import { Direction } from "../../types/direction";
+import { wait } from "../../utils/utils";
+import { NORMAL_DELAY, SMALL_DELAY } from "../../utils/constants";
 
 const select = "select";
 const bubble = "bubble";
 
 export const SortingPage: React.FC = () => {
-    const wait = (delay: number, ...args: any[]) => new Promise(resolve => setTimeout(resolve, delay, ...args));
-    const [oldValue, setOldValue] = React.useState<{
-        selectedOption: string,
-        arrColumnPropsList: Array<ColumnProps>
-    }>({
-        selectedOption: select,
-        arrColumnPropsList: []
-    });
     const [value, setValue] = React.useState<{
         selectedOption: string,
         arrColumnList: Array<JSX.Element>,
@@ -41,74 +35,8 @@ export const SortingPage: React.FC = () => {
         }
         return result;
     }
-    //function generateNumCirclesArrayOld() {
-    //    const result: ColumnProps[] = [];
-    //    const length = Math.floor(Math.random() * 15) + 3;
-    //    const numArray = randomArr(length);
-    //    for (let i = 0; i < numArray.length; i++) {
-    //        let newColumnState: ColumnProps = {
-    //            index: numArray[i]
-    //        };
-    //        result.push(newColumnState)
-    //    }
-    //    setValue({ ...value, arrColumnPropsList: result });
-    //}
-
-    //async function sortBySelectionOld(isIncreasingDirection: boolean) {
-    //    // хз почему, мб стейт не успевает обновиться до захода на следующую итерацию. Но даже с задержками происходят "прыжки в отрисовке на более старую версию стейта"
-    //    for (let i = 0; i < value.arrColumnPropsList.length;i++) {
-    //        let exchangeIndex = i;
-
-
-    //        let newColumn: ColumnProps = value.arrColumnPropsList[i];
-    //        newColumn.state = ElementStates.Changing;
-    //        changeElementAt(i, newColumn)
-    //        for (let j = i+1; j < value.arrColumnPropsList.length; j++) {
-
-    //            let newColumn: ColumnProps = value.arrColumnPropsList[j];
-    //            newColumn.state = ElementStates.Changing;
-    //            changeElementAt(j, newColumn)
-
-    //            if ((value.arrColumnPropsList[exchangeIndex].index > value.arrColumnPropsList[j].index) === isIncreasingDirection) {
-    //                exchangeIndex = j;
-    //            }
-
-
-    //            await wait(1000);
-    //            newColumn = value.arrColumnPropsList[j];
-    //            newColumn.state = ElementStates.Default;
-    //            changeElementAt(j, newColumn)
-    //            await wait(1000);
-    //        }
-    //        if (i !== exchangeIndex) {
-
-    //            let newArr = [...value.arrColumnPropsList];
-    //            const temp = newArr[i];
-    //            temp.state = ElementStates.Modified;
-    //            newArr[i] = newArr[exchangeIndex];
-    //            newArr[exchangeIndex] = temp;
-    //            setValue({ ...value, arrColumnPropsList: newArr });
-
-    //            console.log(newArr)
-    //            console.log(value.arrColumnPropsList)
-    //            exchangeElements(i, exchangeIndex);
-    //            await wait(1000);
-    //            console.log(value.arrColumnPropsList)
-    //        }
-    //        else {
-
-    //            newColumn = value.arrColumnPropsList[i];
-    //            newColumn.state = ElementStates.Modified;
-    //            //changeElementAt(i, newColumn)
-    //        }
-
-    //    }
-    //    //console.log(value.arrColumnPropsList)
-    //}
 
     async function sortBySelection2(isIncreasingDirection: boolean) {
-        console.log("sortBySelection")
-        console.log(value.unsortedColumnPropsList)
         const sortedProps = [...value.unsortedColumnPropsList];
         for (let i = 0; i < sortedProps.length;i++) {
             let exchangeIndex = i;
@@ -124,7 +52,7 @@ export const SortingPage: React.FC = () => {
                 }
 
 
-                await wait(1000);
+                await wait(NORMAL_DELAY);
                 sortedProps[j].state = ElementStates.Default;
                 drawColumns(sortedProps)
             }
@@ -134,15 +62,12 @@ export const SortingPage: React.FC = () => {
                 sortedProps[i] = sortedProps[exchangeIndex];
                 sortedProps[exchangeIndex] = temp;
                 drawColumns(sortedProps)
-
-                //exchangeElements(i, exchangeIndex);
-                //await wait(1000);
             }
             else {
                 sortedProps[i].state = ElementStates.Default;
                 drawColumns(sortedProps)
             }
-            await wait(1000);//да, это криво, но тк, оно не меняет стейт моментально, то без ожидания есть шанс провтыкать перерисовку столбцов.
+            await wait(NORMAL_DELAY);//да, это криво, но тк, оно не меняет стейт моментально, то без ожидания есть шанс провтыкать перерисовку столбцов.
             
             setValue({ ...value, unsortedColumnPropsList: sortedProps });
         }
@@ -163,7 +88,7 @@ export const SortingPage: React.FC = () => {
                 }
 
 
-                await wait(300);
+                await wait(SMALL_DELAY);
                 sortedProps[j].state = ElementStates.Default;
                 drawColumns(sortedProps)
             }
@@ -179,9 +104,6 @@ export const SortingPage: React.FC = () => {
                 sortedProps[i].state = ElementStates.Modified;
                 drawColumns(sortedProps)
             }
-            //await wait(1000);//да, это криво, но тк, оно не меняет стейт моментально, то без ожидания есть шанс провтыкать перерисовку столбцов.
-
-            //setValue({ ...value, unsortedColumnPropsList: sortedProps });
         }
         setValue({ ...value, unsortedColumnPropsList: sortedProps, sortingDown: false, sortingUp: false });
     }
@@ -200,7 +122,7 @@ export const SortingPage: React.FC = () => {
                     sortedProps[j + 1] = temp;
                     drawColumns(sortedProps);
                 }
-                await wait(500);
+                await wait(SMALL_DELAY);
                 sortedProps[j].state = ElementStates.Default;
                 sortedProps[j + 1].state = ElementStates.Default;
                 drawColumns(sortedProps);
@@ -212,53 +134,13 @@ export const SortingPage: React.FC = () => {
         drawColumns(sortedProps);
         setValue({ ...value, unsortedColumnPropsList: sortedProps });
     }
-    //function changeElementAt(index: number, newElement: ColumnProps) {
-    //    let newArr = [...value.arrColumnPropsList];
-    //    if (newArr.length >= index) {
-    //        newArr[index] = newElement;
-    //        setValue({ ...value, arrColumnPropsList: newArr });
-    //    }
-    //}
-    //function exchangeElements(firstIndex: number, secondIndex: number) {
-    //    let newArr = [...value.arrColumnPropsList];
-    //    //console.log(value.arrColumnPropsList)
-    //    //console.log(newArr[firstIndex])
-    //    //console.log(newArr[secondIndex])
-    //    const temp = newArr[firstIndex];
-    //    newArr[firstIndex] = newArr[secondIndex];
-    //    newArr[secondIndex] = temp;
-    //    setValue({ ...value, arrColumnPropsList: newArr });
-    //    //console.log("!!!!!");
-    //    //console.log(newArr)
-    //    //console.log(value.arrColumnPropsList)
-    //    //console.log("---------");
-    //}
     function handleOptionChange(changeEvent: ChangeEvent<HTMLInputElement>) {
         setValue({...value, selectedOption: changeEvent.target.value });
     }
 
-    function drawColumnsOld(arr: ColumnProps[]) {
-        const result: Array<JSX.Element> = [];
-        for (let i = 0; i < arr.length; i++) {
-            let newColumnState = <Column key={uuidv4()} {...arr[i]} />
-            result.push(newColumnState)
-        }
-        console.log(arr)
-        setValue({ ...value, arrColumnList: result });
-    }
     function drawColumns(arr: ColumnProps[]) {
-        //const result: Array<JSX.Element> = [];
-        //for (let i = 0; i < arr.length; i++) {
-        //    let newColumnState = <Column key={uuidv4()} {...arr[i]} />
-        //    result.push(newColumnState)
-        //}
-        //console.log(arr)
         setValue({ ...value, unsortedColumnPropsList: arr });
     }
-
-    //const handleNewArrayClickOld = (event: MouseEvent<HTMLButtonElement>) => {
-    //    generateNumCirclesArray();
-    //};
 
     const handleNewArrayClick = (event: MouseEvent<HTMLButtonElement>) => {
         const propResult: ColumnProps[] = [];
@@ -282,7 +164,6 @@ export const SortingPage: React.FC = () => {
         setValue({ ...value, arrColumnList: colResult, unsortedColumnPropsList: propResult });
     };
     const handleUpSortClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        //generateNumCirclesArray();
         ClearColumnsState();
         setValue({ ...value, sortingUp: true });
         switch (value.selectedOption) {
@@ -295,10 +176,8 @@ export const SortingPage: React.FC = () => {
             default:
                 break;
         }
-        //setValue({ ...value, sortingUp: false });
     };
     const handleDownSortClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        //generateNumCirclesArray();
         ClearColumnsState();
         setValue({ ...value, sortingDown: true });
         switch (value.selectedOption) {
@@ -311,8 +190,6 @@ export const SortingPage: React.FC = () => {
             default:
                 break;
         }
-        console.log(value.sortingDown)
-        //setValue({ ...value, sortingDown: false });
 
     };
     function ClearColumnsState() {

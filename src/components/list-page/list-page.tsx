@@ -7,9 +7,10 @@ import { Circle, CircleProps } from "../ui/circle/circle";
 import { LinkedList, Node } from "../../utils/linearCollection";
 import { ElementStates } from "../../types/element-states";
 import { v4 as uuidv4 } from "uuid";
+import { wait } from "../../utils/utils";
+import { SMALL_DELAY } from "../../utils/constants";
 
 export const ListPage: React.FC = () => {
-    const wait = (delay: number, ...args: any[]) => new Promise(resolve => setTimeout(resolve, delay, ...args));
     const [value, setValue] = React.useState<{
         indStr: string,
         nodeStr: string,
@@ -22,57 +23,6 @@ export const ListPage: React.FC = () => {
         circlesPropsList: []
     });
 
-    //async function insertNodeAt(insertIndex: number) {
-    //    const newCircleState: CircleProps = {
-    //        letter: value.nodeStr,
-    //        state: ElementStates.Modified
-    //    };
-    //    let newNode: Node<CircleProps>|null = null;
-    //    if (value.rootNode && insertIndex!==0) {
-    //        let prev: Node<CircleProps> | null = null;
-    //        let nextNode: Node<CircleProps> | null = value.rootNode;
-    //        for (let i = 0; i <= insertIndex; i++) {
-    //            if (nextNode === null) {
-    //                //throw new Error("Maximum length exceeded");
-    //                break;//если за пределами списка не нашёл, что делать. Можно канешн хардкодно чекать размер до вызова, но не оч надёжное решение.
-    //            }
-    //            prev = nextNode;
-    //            nextNode = nextNode.next;
-    //        }
-    //        newNode = new Node<CircleProps>(newCircleState);
-    //        if (prev !== null) {//так-то тут не может быть нулл, но тс не в курсе.
-    //            prev.next = newNode;
-    //        }
-
-    //        newNode.next = nextNode;
-    //    }
-    //    else {
-    //        newNode = new Node<CircleProps>(newCircleState);
-    //        newNode.next = value.rootNode;
-    //        setValue({ ...value, rootNode: newNode, nodeStr: "", indStr:"" });
-    //    }
-    //    drawCircles();
-    //    await wait(500);
-    //    if (newNode) {
-    //        newNode.value.state = ElementStates.Default;
-    //    }
-    //    drawCircles();
-    //}
-
-    //function drawCirclesOld() {
-    //    const result: Array<CircleProps> = [];
-    //    if (value.rootNode) {
-    //    }
-    //    let propsNode = value.rootNode;
-    //    while (propsNode) {
-    //        result.push(propsNode.value);
-    //        propsNode = propsNode.next;
-    //    }
-    //    console.log("drawCircles")
-    //    console.log(result)
-    //    console.log(value.rootNode)
-    //    setValue({ ...value, circlesPropsList: result });
-    //}
     function drawCircles() {
         const result: CircleProps[] = [];
         let tempNode = value.LinkedNodeList.getAt(0)
@@ -86,15 +36,6 @@ export const ListPage: React.FC = () => {
         }
         setValue({ ...value, circlesPropsList: result });
     }
-
-    //function insertAtOld(index:number) {
-
-    //    const newCircleState: CircleProps = {
-    //        letter: value.nodeStr,
-    //        state: ElementStates.Changing
-    //    };
-    //    const newCircle: ReactNode = <Circle key={uuidv4()} {...newCircleState} isSmall={true} />
-    //}
     
     const handleAddHeadClick = async (event: MouseEvent<HTMLButtonElement>) => {
         if (value.LinkedNodeList.getSize()) {
@@ -110,7 +51,7 @@ export const ListPage: React.FC = () => {
                 head.value.head = smallCircle;
             }
             drawCircles();
-            await wait(500);
+            await wait(SMALL_DELAY);
             if (head) {
                 head.value.head = null;
             }
@@ -119,7 +60,7 @@ export const ListPage: React.FC = () => {
                 state: ElementStates.Modified
             });
             drawCircles();
-            await wait(500);
+            await wait(SMALL_DELAY);
             head = value.LinkedNodeList.getAt(0)
             if (head) {
                 head.value.state = ElementStates.Default;
@@ -133,7 +74,7 @@ export const ListPage: React.FC = () => {
             };
             value.LinkedNodeList.addHead(newCircleState);
             drawCircles();
-            await wait(500);
+            await wait(SMALL_DELAY);
             const head = value.LinkedNodeList.getAt(0)
             if (head) {
                 head.value.state = ElementStates.Default;
@@ -156,7 +97,7 @@ export const ListPage: React.FC = () => {
                 tail.value.head = smallCircle;
             }
             drawCircles();
-            await wait(500);
+            await wait(SMALL_DELAY);
             if (tail) {
                 tail.value.head = null;
             }
@@ -165,7 +106,7 @@ export const ListPage: React.FC = () => {
                 state: ElementStates.Modified
             });
             drawCircles();
-            await wait(500);
+            await wait(SMALL_DELAY);
             tail = value.LinkedNodeList.getAt(size)
             if (tail) {
                 tail.value.state = ElementStates.Default;
@@ -179,7 +120,7 @@ export const ListPage: React.FC = () => {
             };
             value.LinkedNodeList.addHead(newCircleState);
             drawCircles();
-            await wait(500);
+            await wait(SMALL_DELAY);
             const tail = value.LinkedNodeList.getAt(0)
             if (tail) {
                 tail.value.state = ElementStates.Default;
@@ -204,7 +145,7 @@ export const ListPage: React.FC = () => {
                 head.value.tail = smallCircle;
 
                 drawCircles();
-                await wait(500);
+                await wait(SMALL_DELAY);
                 value.LinkedNodeList.removeHead();
                 drawCircles();
             }
@@ -227,7 +168,7 @@ export const ListPage: React.FC = () => {
                 tail.value.tail = smallCircle;
 
                 drawCircles();
-                await wait(500);
+                await wait(SMALL_DELAY);
                 value.LinkedNodeList.removeTail();
                 drawCircles();
             }
@@ -249,7 +190,7 @@ export const ListPage: React.FC = () => {
                 if (tempNode) {
                     tempNode.value.head = smallCircle;
                     drawCircles();
-                    await wait(500);
+                    await wait(SMALL_DELAY);
                     tempNode.value.state = ElementStates.Changing;
                     tempNode.value.head = i === 0 ? "head" : "";
                 }
@@ -266,7 +207,7 @@ export const ListPage: React.FC = () => {
             };
             value.LinkedNodeList.insertAt(newCircleState, insertInd);
             drawCircles();
-            await wait(500);
+            await wait(SMALL_DELAY);
             const tail = value.LinkedNodeList.getAt(insertInd)
             if (tail) {
                 tail.value.state = ElementStates.Default;
@@ -283,7 +224,7 @@ export const ListPage: React.FC = () => {
                 if (tempNode) {
                     tempNode.value.state = ElementStates.Changing;
                     drawCircles();
-                    await wait(500);
+                    await wait(SMALL_DELAY);
                 }
             }
             const tempNode = value.LinkedNodeList.getAt(removeInd);
@@ -304,7 +245,7 @@ export const ListPage: React.FC = () => {
                 tempNode.value.letter = "";
                 tempNode.value.tail = smallCircle;
                 drawCircles();
-                await wait(500);
+                await wait(SMALL_DELAY);
                 value.LinkedNodeList.removeAt(removeInd);
                 drawCircles();
             }

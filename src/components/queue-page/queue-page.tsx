@@ -7,10 +7,10 @@ import { Circle, CircleProps } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
 import { Button } from "../ui/button/button";
 import { v4 as uuidv4 } from "uuid";
+import { wait } from "../../utils/utils";
+import { SMALL_DELAY } from "../../utils/constants";
 
 export const QueuePage: React.FC = () => {
-    const wait = (delay: number, ...args: any[]) => new Promise(resolve => setTimeout(resolve, delay, ...args));
-    //let stringStack: Stack<string> = new Stack<string>();
     const [value, setValue] = React.useState<{
         inputStr: string,
         stringStack: Queue<string>,
@@ -28,7 +28,6 @@ export const QueuePage: React.FC = () => {
         setValue({ ...value, inputStr: e.target.value });
     };
     const handleEnqueueClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        //setValue({ ...value, inputStr: "" });
         let tailIndex = value.stringStack.getTail();
         if (tailIndex !== null) {
             tailIndex++;
@@ -39,18 +38,17 @@ export const QueuePage: React.FC = () => {
 
         drawCircles(true, tailIndex);
         value.stringStack.enqueue(value.inputStr);
-        await wait(500);
+        await wait(SMALL_DELAY);
         drawCircles(false);
     };
     const handleDequeueClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        //setValue({ ...value, inputStr: "" });
         let headIndex = value.stringStack.getHead();
         if (headIndex===null) {
             headIndex = 0;
         }
         drawCircles(true, headIndex);
         value.stringStack.dequeue();
-        await wait(500);
+        await wait(SMALL_DELAY);
         drawCircles(false);
     };
     const handleClearClick = async (event: MouseEvent<HTMLButtonElement>) => {

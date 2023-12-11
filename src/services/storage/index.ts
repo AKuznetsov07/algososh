@@ -1,13 +1,12 @@
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { rootReducer } from "../reducers";
-import { TStringActions } from "../actions/stringActions";
 import { store } from "./store";
 
 
 export type AppState = ReturnType<typeof rootReducer>;
 
-type AppActions = TStringActions;
+type AppActions = any;
 
 export type AppThunk<ReturnType = void> = ThunkAction<
     ReturnType,
