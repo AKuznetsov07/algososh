@@ -14,19 +14,24 @@ const select = "select";
 const bubble = "bubble";
 
 export const SortingPage: React.FC = () => {
-    const [value, setValue] = React.useState<{
-        selectedOption: string,
-        arrColumnList: Array<JSX.Element>,
-        unsortedColumnPropsList: Array<ColumnProps>,
-        sortingUp: boolean,
-        sortingDown: boolean
-    }>({
-        selectedOption: select,
-        arrColumnList: [],
-        unsortedColumnPropsList: [],
-        sortingUp: false,
-        sortingDown: false
-    });
+    //const [value, setValue] = React.useState<{
+    //    selectedOption: string,
+    //    arrColumnList: Array<JSX.Element>,
+    //    unsortedColumnPropsList: Array<ColumnProps>,
+    //    sortingUp: boolean,
+    //    sortingDown: boolean
+    //}>({
+    //    selectedOption: select,
+    //    arrColumnList: [],
+    //    unsortedColumnPropsList: [],
+    //    sortingUp: false,
+    //    sortingDown: false
+    //});
+    const [selectedOption, setSelectedOption] = React.useState(select);
+    const [arrColumnList, setArrColumnList] = React.useState<Array<JSX.Element>>([]);
+    const [unsortedColumnPropsList, setUnsortedColumnPropsList] = React.useState<Array<ColumnProps>>([]);
+    const [sortingUp, setSortingUp] = React.useState(false);
+    const [sortingDown, setSortingDown] = React.useState(false);
 
     function randomArr(arrLength: number) {
         const result: number[] = [];
@@ -36,44 +41,8 @@ export const SortingPage: React.FC = () => {
         return result;
     }
 
-    async function sortBySelection2(isIncreasingDirection: boolean) {
-        const sortedProps = [...value.unsortedColumnPropsList];
-        for (let i = 0; i < sortedProps.length;i++) {
-            let exchangeIndex = i;
-
-            sortedProps[i].state = ElementStates.Changing;
-            drawColumns(sortedProps)
-            for (let j = i + 1; j < sortedProps.length; j++) {
-                sortedProps[j].state = ElementStates.Changing;
-                drawColumns(sortedProps)
-
-                if ((sortedProps[exchangeIndex].index > sortedProps[j].index) === isIncreasingDirection) {
-                    exchangeIndex = j;
-                }
-
-
-                await wait(NORMAL_DELAY);
-                sortedProps[j].state = ElementStates.Default;
-                drawColumns(sortedProps)
-            }
-            if (i !== exchangeIndex) {
-                const temp = sortedProps[i];
-                temp.state = ElementStates.Modified;
-                sortedProps[i] = sortedProps[exchangeIndex];
-                sortedProps[exchangeIndex] = temp;
-                drawColumns(sortedProps)
-            }
-            else {
-                sortedProps[i].state = ElementStates.Default;
-                drawColumns(sortedProps)
-            }
-            await wait(NORMAL_DELAY);//да, это криво, но тк, оно не меняет стейт моментально, то без ожидания есть шанс провтыкать перерисовку столбцов.
-            
-            setValue({ ...value, unsortedColumnPropsList: sortedProps });
-        }
-    }
     async function sortBySelection(isIncreasingDirection: boolean) {
-        const sortedProps = [...value.unsortedColumnPropsList];
+        const sortedProps = [...unsortedColumnPropsList];
         for (let i = 0; i < sortedProps.length; i++) {
             let exchangeIndex = i;
 
@@ -105,10 +74,10 @@ export const SortingPage: React.FC = () => {
                 drawColumns(sortedProps)
             }
         }
-        setValue({ ...value, unsortedColumnPropsList: sortedProps, sortingDown: false, sortingUp: false });
+        setUnsortedColumnPropsList(sortedProps)
     }
     async function sortByBubble(isIncreasingDirection: boolean) {
-        const sortedProps = [...value.unsortedColumnPropsList];
+        const sortedProps = [...unsortedColumnPropsList];
         for (let i = sortedProps.length-1; i > 0; i--) {
 
             for (let j = 0; j < i; j++) {
@@ -116,7 +85,6 @@ export const SortingPage: React.FC = () => {
                 sortedProps[j + 1].state = ElementStates.Changing;
                 drawColumns(sortedProps);
                 if ((sortedProps[j].index > sortedProps[j + 1].index) === isIncreasingDirection) { 
-                    //swap(arr[i], arr[j + 1]);
                     let temp = sortedProps[j];
                     sortedProps[j] = sortedProps[j + 1];
                     sortedProps[j + 1] = temp;
@@ -132,14 +100,14 @@ export const SortingPage: React.FC = () => {
         }
         sortedProps[0].state = ElementStates.Modified;
         drawColumns(sortedProps);
-        setValue({ ...value, unsortedColumnPropsList: sortedProps });
+        setUnsortedColumnPropsList(sortedProps)
     }
     function handleOptionChange(changeEvent: ChangeEvent<HTMLInputElement>) {
-        setValue({...value, selectedOption: changeEvent.target.value });
+        setSelectedOption(changeEvent.target.value)
     }
 
     function drawColumns(arr: ColumnProps[]) {
-        setValue({ ...value, unsortedColumnPropsList: arr });
+        setUnsortedColumnPropsList([...arr])
     }
 
     const handleNewArrayClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -153,20 +121,19 @@ export const SortingPage: React.FC = () => {
             propResult.push(newColumnState)
         }
 
-        //setValue({ ...value, unsortedColumnPropsList: propResult });
-        //drawColumns(result); опять не успевает записать
         const colResult: Array<JSX.Element> = [];
         for (let i = 0; i < propResult.length; i++) {
             let newColumnState = <Column key={uuidv4()} {...propResult[i]} />
             colResult.push(newColumnState)
         }
 
-        setValue({ ...value, arrColumnList: colResult, unsortedColumnPropsList: propResult });
+        setArrColumnList(colResult)
+        setUnsortedColumnPropsList(propResult)
     };
     const handleUpSortClick = async (event: MouseEvent<HTMLButtonElement>) => {
         ClearColumnsState();
-        setValue({ ...value, sortingUp: true });
-        switch (value.selectedOption) {
+        setSortingUp(true)
+        switch (selectedOption) {
             case select:
                 await sortBySelection(true);
                 break;
@@ -176,11 +143,13 @@ export const SortingPage: React.FC = () => {
             default:
                 break;
         }
+        setSortingUp(false)
     };
     const handleDownSortClick = async (event: MouseEvent<HTMLButtonElement>) => {
         ClearColumnsState();
-        setValue({ ...value, sortingDown: true });
-        switch (value.selectedOption) {
+        setSortingDown(true)
+        //setValue({ ...value, sortingDown: true });
+        switch (selectedOption) {
             case select:
                 await sortBySelection(false);
                 break;
@@ -190,10 +159,11 @@ export const SortingPage: React.FC = () => {
             default:
                 break;
         }
+        setSortingDown(false)
 
     };
     function ClearColumnsState() {
-        const sortedProps = [...value.unsortedColumnPropsList];
+        const sortedProps = [...unsortedColumnPropsList];
         for (let i = 0; i < sortedProps.length; i++) {
             sortedProps[i].state = ElementStates.Default;
         }
@@ -204,18 +174,14 @@ export const SortingPage: React.FC = () => {
     <SolutionLayout title="Сортировка массива">
           <form>
               <div className={`${styles.inputRow}`}>
-                  <RadioInput label="select" value={select} checked={value.selectedOption === select} onChange={handleOptionChange}></RadioInput>
-                  <RadioInput label="bubble" value={bubble} checked={value.selectedOption === bubble} onChange={handleOptionChange}></RadioInput>
-                  <Button text="Up" onClick={handleUpSortClick} sorting={Direction.Ascending} isLoader={value.sortingUp}></Button>
-                  <Button text="down" onClick={handleDownSortClick} sorting={Direction.Descending} isLoader={value.sortingDown}></Button>
-                  <Button text="new" onClick={handleNewArrayClick}></Button>
+                  <RadioInput label="select" value={select} checked={selectedOption === select} onChange={handleOptionChange}></RadioInput>
+                  <RadioInput label="bubble" value={bubble} checked={selectedOption === bubble} onChange={handleOptionChange}></RadioInput>
+                  <Button text="Up" onClick={handleUpSortClick} sorting={Direction.Ascending} disabled={sortingUp || sortingDown} isLoader={sortingUp}></Button>
+                  <Button text="down" onClick={handleDownSortClick} sorting={Direction.Descending} disabled={sortingUp || sortingDown} isLoader={sortingDown}></Button>
+                  <Button text="new" onClick={handleNewArrayClick} disabled={sortingUp || sortingDown}></Button>
               </div>
               <div className={`${styles.columnsGrid}`}>
-                  {/*{value.arrColumnPropsList.map((columnProps) => (*/}
-                  {/*    <Column key={uuidv4()} {...columnProps} />*/}
-                  {/*))}*/}
-                  {/*{value.arrColumnList }*/}
-                  {value.unsortedColumnPropsList.map((columnProps) => (
+                  {unsortedColumnPropsList.map((columnProps) => (
                       <Column key={uuidv4()} {...columnProps} />
                   ))}
               </div>
