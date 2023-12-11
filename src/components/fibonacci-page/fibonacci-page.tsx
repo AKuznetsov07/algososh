@@ -10,13 +10,18 @@ import { NORMAL_DELAY } from "../../utils/constants";
 
 export const FibonacciPage: React.FC = () => {
     const maxValue = 19;
-    const [value, setValue] = React.useState<{ inputInt: number | undefined, fibCirclesPropsList: Array<CircleProps> }>({ inputInt: undefined, fibCirclesPropsList: [] });
+    const [inputInt, setInputInt] = React.useState<number | undefined>(undefined);
+    const [fibCirclesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
+    const [isDisabled, setIsDisabledValue] = React.useState(true);
+    const [isProgressing, setProgressingValue] = React.useState(false);
 
 
-    const handleCountFibClick = (event: MouseEvent<HTMLButtonElement>) => {
-        if (value.inputInt) {
-            drawNumber(value.inputInt);
+    const handleCountFibClick = async (event: MouseEvent<HTMLButtonElement>) => {
+        setProgressingValue(true);
+        if (inputInt) {
+            await drawNumber(inputInt);
         }
+        setProgressingValue(false);
     };
     async function drawNumber(maxValue: number) {
 
@@ -29,7 +34,7 @@ export const FibonacciPage: React.FC = () => {
                 index: i
             };
             newList = [...newList, newCircleState]
-            setValue({ ...value, fibCirclesPropsList: newList });
+            setPropsList(newList);
             await wait(NORMAL_DELAY);
         }
     }
@@ -48,19 +53,27 @@ export const FibonacciPage: React.FC = () => {
     const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = Number(e.target.value)
         if (newValue >= 0 && newValue <= maxValue) {
-            setValue({ ...value, inputInt: newValue });
+            setInputInt(newValue);
+            setIsDisabledValue(false);
+        }
+        else {
+            setIsDisabledValue(true);
         }
     };
     return (
         <SolutionLayout title="Последовательность Фибоначчи">
             <div>
                 <div className={`${styles.inputRow}`}>
-                    <Input max={maxValue} type="number" isLimitText={true} value={value.inputInt} onChange={onValueChange}></Input>
-                    <Button text="Развернуть" onClick={handleCountFibClick}></Button>
+                    <Input max={maxValue} isLimitText={true}
+                        onChange={onValueChange}
+                        type="number"
+                        disabled={isProgressing}></Input>
+                    <Button text="Развернуть" onClick={handleCountFibClick}
+                        disabled={isDisabled || isProgressing} isLoader={isProgressing}></Button>
                 </div>
             </div>
             <div className={`${styles.circlesGrid}`}>
-                {value.fibCirclesPropsList.map((circlesProps) => (
+                {fibCirclesPropsList.map((circlesProps) => (
                     <Circle key={uuidv4()} {...circlesProps} />
                 ))}
             </div>

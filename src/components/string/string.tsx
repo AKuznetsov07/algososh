@@ -11,7 +11,7 @@ import { NORMAL_DELAY } from "../../utils/constants";
 
 export const StringComponent: React.FC = () => {
     const [inputStr, setInputStrValue] = React.useState<string>("");
-    const [stringCirclesPropsList, setPropsListValue] = React.useState<Array<CircleProps>>([]);
+    const [stringCirclesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
     const [isDisabled, setEnableValue] = React.useState<boolean>(false);
 
     const handleTurnAroundClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -39,7 +39,7 @@ export const StringComponent: React.FC = () => {
             if (reverseInd !== index) {
                 stringCircles[index].state = ElementStates.Changing;
                 stringCircles[reverseInd].state = ElementStates.Changing;
-                setPropsListValue([...stringCircles]);
+                setPropsList([...stringCircles]);
             }
             await wait(NORMAL_DELAY);
             stringCircles[index].state = ElementStates.Modified;
@@ -47,7 +47,7 @@ export const StringComponent: React.FC = () => {
             const temp = stringCircles[index];
             stringCircles[index] = stringCircles[reverseInd];
             stringCircles[reverseInd] = temp;
-            setPropsListValue([...stringCircles]);
+            setPropsList([...stringCircles]);
         }
         setEnableValue(false);
     }
