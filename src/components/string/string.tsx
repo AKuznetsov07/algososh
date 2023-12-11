@@ -31,23 +31,21 @@ export const StringComponent: React.FC = () => {
     async function reverseStep(stringCircles: Array<CircleProps>) {
         const mid = Math.floor(stringCircles.length / 2);
 
-        for (let index = 0; index < mid; index++) {
-            if (stringCircles.length - 1 - index === index) {
-                stringCircles[index].state = ElementStates.Modified;
-                setValue({ ...value, stringCirclesPropsList: stringCircles });
-            }
-            else {
+        for (let index = 0; index <= mid; index++) {
+            let reverseInd = stringCircles.length - 1 - index;
+            if (reverseInd !== index) {
                 stringCircles[index].state = ElementStates.Changing;
-                stringCircles[stringCircles.length - 1 - index].state = ElementStates.Changing;
-                setValue({ ...value, stringCirclesPropsList: stringCircles });
-                await wait(NORMAL_DELAY);
-                stringCircles[index].state = ElementStates.Modified;
-                stringCircles[stringCircles.length - 1 - index].state = ElementStates.Modified;
-                const temp = stringCircles[index];
-                stringCircles[index] = stringCircles[stringCircles.length - 1 - index];
-                stringCircles[stringCircles.length - 1 - index] = temp;
+                stringCircles[reverseInd].state = ElementStates.Changing;
                 setValue({ ...value, stringCirclesPropsList: stringCircles });
             }
+            await wait(NORMAL_DELAY);
+            //console.log(index)
+            stringCircles[index].state = ElementStates.Modified;
+            stringCircles[reverseInd].state = ElementStates.Modified;
+            const temp = stringCircles[index];
+            stringCircles[index] = stringCircles[reverseInd];
+            stringCircles[reverseInd] = temp;
+            setValue({ ...value, stringCirclesPropsList: stringCircles });
         }
     }
   return (
