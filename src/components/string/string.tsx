@@ -10,10 +10,12 @@ import { wait } from "../../utils/utils";
 import { NORMAL_DELAY } from "../../utils/constants";
 
 export const StringComponent: React.FC = () => {
-    const [value, setValue] = React.useState<{ inputStr: string, stringCirclesPropsList: Array<CircleProps> }>({ inputStr: "", stringCirclesPropsList :[]});
+    const [inputStr, setInputStrValue] = React.useState<string>("");
+    const [stringCirclesPropsList, setPropsListValue] = React.useState<Array<CircleProps>>([]);
+    const [isDisabled, setEnableValue] = React.useState<boolean>(false);
 
     const handleTurnAroundClick = (event: MouseEvent<HTMLButtonElement>) => {
-        const charArrayToReverse = value.inputStr.split('');
+        const charArrayToReverse = inputStr.split('');
         const stringCircles: Array<CircleProps> = [];
         for (let i = 0; i < charArrayToReverse.length; i++) {
             const newCircleState: CircleProps = {
@@ -25,10 +27,11 @@ export const StringComponent: React.FC = () => {
     };
 
     const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue({ ...value, inputStr: e.target.value });
+        setInputStrValue( e.target.value );
     };
 
     async function reverseStep(stringCircles: Array<CircleProps>) {
+        setEnableValue(true);
         const mid = Math.floor(stringCircles.length / 2);
 
         for (let index = 0; index <= mid; index++) {
@@ -36,28 +39,31 @@ export const StringComponent: React.FC = () => {
             if (reverseInd !== index) {
                 stringCircles[index].state = ElementStates.Changing;
                 stringCircles[reverseInd].state = ElementStates.Changing;
-                setValue({ ...value, stringCirclesPropsList: stringCircles });
+                setPropsListValue([...stringCircles]);
             }
             await wait(NORMAL_DELAY);
-            //console.log(index)
             stringCircles[index].state = ElementStates.Modified;
             stringCircles[reverseInd].state = ElementStates.Modified;
             const temp = stringCircles[index];
             stringCircles[index] = stringCircles[reverseInd];
             stringCircles[reverseInd] = temp;
-            setValue({ ...value, stringCirclesPropsList: stringCircles });
+            setPropsListValue([...stringCircles]);
         }
+        setEnableValue(false);
     }
   return (
     <SolutionLayout title="Строка">
           <div>
               <div className={`${styles.inputRow}`}>
-                  <Input maxLength={11} isLimitText={true} value={value.inputStr} onChange={onValueChange}></Input>
-                  <Button text="Развернуть" onClick={handleTurnAroundClick}></Button>
+                  <Input maxLength={11} isLimitText={true} value={inputStr}
+                      onChange={onValueChange}></Input>
+                  <Button text="Развернуть"
+                      onClick={handleTurnAroundClick}
+                      disabled={isDisabled} isLoader={isDisabled}></Button>
               </div>
           </div>
           <div className={`${styles.circlesGrid}`}>
-              {value.stringCirclesPropsList.map((circlesProps) => (
+              {stringCirclesPropsList.map((circlesProps) => (
                   <Circle key={uuidv4()} {...circlesProps} />
               ))}
           </div>
