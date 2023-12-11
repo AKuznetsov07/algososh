@@ -11,39 +11,35 @@ import { wait } from "../../utils/utils";
 import { SMALL_DELAY } from "../../utils/constants";
 
 export const StackPage: React.FC = () => {
-    const [value, setValue] = React.useState<{
-        inputStr: string,
-        stringStack: Stack<string>,
-        stringCirclesPropsList: Array<CircleProps>
-    }>({
-        inputStr: "",
-        stringStack: new Stack<string>(),
-        stringCirclesPropsList: []
-    });
+    const [inputStr, setInputStr] = React.useState<string>("");
+    const [stringCirclesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
+    const [stringStack, setStringStack] = React.useState<Stack<string>>(new Stack<string>());
     const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue({ ...value, inputStr: e.target.value });
+        setInputStr(e.target.value);
     };
     const handlePushClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        value.stringStack.push(value.inputStr);
+        stringStack.push(inputStr);
         drawCircles(true);
         await wait(SMALL_DELAY);
         drawCircles(false);
     };
     const handlePopClick = async (event: MouseEvent<HTMLButtonElement>) => {
         drawCircles(true);
-        value.stringStack.pop();
+        stringStack.pop();
         await wait(SMALL_DELAY);
         drawCircles(false);
     };
     const handleClearClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        value.stringStack = new Stack<string>();
-        setValue({ ...value, stringCirclesPropsList: [], inputStr:"" });
+        setStringStack(new Stack<string>());
+        setPropsList([]);
+        setInputStr("")
     };
 
     function drawCircles(isLastColored: boolean) {
-        const values = value.stringStack.getVisualisationData();
+        const values = stringStack.getVisualisationData();
         if (values.length===0) {
-            return setValue({ ...value, stringCirclesPropsList: [], inputStr: "" });
+            setPropsList([]);
+            setInputStr("")
         }
         const result: Array<CircleProps> = [];
         for (let i = 0; i < values.length;i++) {
@@ -56,20 +52,21 @@ export const StackPage: React.FC = () => {
             result[values.length - 1].state = ElementStates.Changing;
         }
         result[values.length - 1].head = "top";
-        setValue({ ...value, stringCirclesPropsList: result, inputStr: "" });
+        setPropsList([...result]);
+        setInputStr("")
     }
 
 
   return (
     <SolutionLayout title="Стек">
           <div className={`${styles.inputRow}`}>
-              <Input maxLength={4} isLimitText={true} value={value.inputStr} onChange={onValueChange}></Input>
-              <Button text="add" onClick={handlePushClick}></Button>
-              <Button text="drop" onClick={handlePopClick}></Button>
+              <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
+              <Button text="add" onClick={handlePushClick} disabled={inputStr.length === 0}></Button>
+              <Button text="drop" onClick={handlePopClick} disabled={stringStack.getSize()===0}></Button>
               <Button text="clear" onClick={handleClearClick}></Button>
           </div>
           <div className={`${styles.circlesGrid}`}>
-              {value.stringCirclesPropsList.map((circlesProps) => (
+              {stringCirclesPropsList.map((circlesProps) => (
                   <Circle key={uuidv4()} {...circlesProps} />
               ))}
           </div>
