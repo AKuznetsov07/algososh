@@ -11,24 +11,20 @@ import { wait } from "../../utils/utils";
 import { SMALL_DELAY } from "../../utils/constants";
 
 export const QueuePage: React.FC = () => {
-    const [value, setValue] = React.useState<{
-        inputStr: string,
-        stringStack: Queue<string>,
-        stringCirclesPropsList: Array<CircleProps>
-    }>({
-        inputStr: "",
-        stringStack: new Queue<string>(7),
-        stringCirclesPropsList: []
-    });
+    const queueMaxLength = 7;
+
+    const [inputStr, setInputStr] = React.useState<string>("");
+    const [stringQueue, setStringQueue] = React.useState<Queue<string>>(new Queue<string>(queueMaxLength));
+    const [stringCirclesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
     useEffect(() => {
         drawCircles(false);
     },[])
 
     const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue({ ...value, inputStr: e.target.value });
+        setInputStr(e.target.value);
     };
     const handleEnqueueClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        let tailIndex = value.stringStack.getTail();
+        let tailIndex = stringQueue.getTail();
         if (tailIndex !== null) {
             tailIndex++;
         }
@@ -37,30 +33,34 @@ export const QueuePage: React.FC = () => {
         }
 
         drawCircles(true, tailIndex);
-        value.stringStack.enqueue(value.inputStr);
+        stringQueue.enqueue(inputStr);
         await wait(SMALL_DELAY);
         drawCircles(false);
     };
     const handleDequeueClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        let headIndex = value.stringStack.getHead();
+        let headIndex = stringQueue.getHead();
         if (headIndex===null) {
             headIndex = 0;
         }
         drawCircles(true, headIndex);
-        value.stringStack.dequeue();
+        stringQueue.dequeue();
         await wait(SMALL_DELAY);
         drawCircles(false);
     };
     const handleClearClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        value.stringStack = new Queue<string>(7);
-        drawCircles(false);
+        setStringQueue(new Queue<string>(queueMaxLength));
+        setInputStr("")
+        const result: Array<CircleProps> = [];
+        for (let i = 0; i < queueMaxLength; i++) {
+            result.push({
+                index: i
+            });
+        }
+        setPropsList(result);
     };
 
     function drawCircles(isColored: boolean, colorIndex:number = 0) {
-        const values = value.stringStack.getVisualisationData();
-        if (values.length === 0) {
-            return setValue({ ...value, stringCirclesPropsList: [], inputStr: "" });
-        }
+        const values = stringQueue.getVisualisationData();
         const result: Array<CircleProps> = [];
         for (let i = 0; i < values.length; i++) {
             const letterValue = values[i] !== null ? values[i] : "" as string;
@@ -74,28 +74,30 @@ export const QueuePage: React.FC = () => {
             result[colorIndex].state = ElementStates.Changing;
         }
 
-        const headIndex = value.stringStack.getHead();
+        const headIndex = stringQueue.getHead();
         if (headIndex !== null) {
             result[headIndex].head = "head";
         }
-        const tailIndex = value.stringStack.getTail();
+        const tailIndex = stringQueue.getTail();
         if (tailIndex) {
             result[tailIndex].tail = "tail";
         }
-        setValue({ ...value, stringCirclesPropsList: result, inputStr: "" });
+
+        setPropsList(result);
+        setInputStr("")
     }
 
 
   return (
       <SolutionLayout title="Очередь">
           <div className={`${styles.inputRow}`}>
-              <Input maxLength={4} isLimitText={true} value={value.inputStr} onChange={onValueChange}></Input>
-              <Button text="add" onClick={handleEnqueueClick}></Button>
-              <Button text="drop" onClick={handleDequeueClick}></Button>
-              <Button text="clear" onClick={handleClearClick}></Button>
+              <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
+              <Button text="add" onClick={handleEnqueueClick} disabled={(inputStr.length === 0) || (stringQueue.getTail() === queueMaxLength - 1)}></Button>
+              <Button text="drop" onClick={handleDequeueClick} disabled={stringQueue.getHead() ===null }></Button>
+              <Button text="clear" onClick={handleClearClick} disabled={stringQueue.getHead() === null}></Button>
           </div>
           <div className={`${styles.circlesGrid}`}>
-              {value.stringCirclesPropsList.map((circlesProps) => (
+              {stringCirclesPropsList.map((circlesProps) => (
                   <Circle key={uuidv4()} {...circlesProps} />
               ))}
           </div>

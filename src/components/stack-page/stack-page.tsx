@@ -63,7 +63,7 @@ export const StackPage: React.FC = () => {
               <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
               <Button text="add" onClick={handlePushClick} disabled={inputStr.length === 0}></Button>
               <Button text="drop" onClick={handlePopClick} disabled={stringStack.getSize()===0}></Button>
-              <Button text="clear" onClick={handleClearClick}></Button>
+              <Button text="clear" onClick={handleClearClick} disabled={stringStack.getSize() === 0}></Button>
           </div>
           <div className={`${styles.circlesGrid}`}>
               {stringCirclesPropsList.map((circlesProps) => (
