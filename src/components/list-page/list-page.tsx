@@ -1,31 +1,33 @@
-import React, { ChangeEvent, MouseEvent, ReactNode } from "react";
+import React, { ChangeEvent, MouseEvent } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import styles from "./list-page.module.css";
 import { Circle, CircleProps } from "../ui/circle/circle";
-import { LinkedList, Node } from "../../utils/linearCollection";
+import { LinkedList } from "../../utils/linearCollection";
 import { ElementStates } from "../../types/element-states";
 import { v4 as uuidv4 } from "uuid";
 import { wait } from "../../utils/utils";
-import { SMALL_DELAY } from "../../utils/constants";
+import { ADD_HEAD, ADD_INDEX, ADD_TAIL, REMOVE_HEAD, REMOVE_INDEX, REMOVE_TAIL, SMALL_DELAY } from "../../utils/constants";
 
 export const ListPage: React.FC = () => {
-    const [value, setValue] = React.useState<{
-        indStr: string,
-        nodeStr: string,
-        LinkedNodeList: LinkedList<CircleProps> ,
-        circlesPropsList: Array<CircleProps>
-    }>({
-        indStr: "",
-        nodeStr: "",
-        LinkedNodeList: new LinkedList(),
-        circlesPropsList: []
-    });
-
+    const [indStr, setIndStr] = React.useState<string>("");
+    const [nodeStr, setNodeStr] = React.useState<string>("");
+    const [linkedNodeList, setLinkedNodeList] = React.useState<LinkedList<CircleProps>>(new LinkedList());
+    const [circlesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
+    const [isProcessing, setIsProcessing] = React.useState(false);
+    ///
+    //const [isHeadAdding, setIsHeadAdding] = React.useState(false);
+    //const [isTailAdding, setIsTailAdding] = React.useState(false);
+    //const [isHeadRemoving, setIsHeadRemoving] = React.useState(false);
+    //const [isTailRemoving, setIsTailRemoving] = React.useState(false);
+    //const [isIndexAdding, setIsIndexAdding] = React.useState(false);
+    //const [isIndexRemoving, setIsIndexRemoving] = React.useState(false);
+    ///
+    const [processingMode, setProcessingMode] = React.useState("");
     function drawCircles() {
         const result: CircleProps[] = [];
-        let tempNode = value.LinkedNodeList.getAt(0)
+        let tempNode = linkedNodeList.getAt(0)
         let i = 0;
         while (tempNode) {
             const prop = tempNode.value;
@@ -34,19 +36,21 @@ export const ListPage: React.FC = () => {
             tempNode = tempNode.next;
             i++;
         }
-        setValue({ ...value, circlesPropsList: result });
+        setPropsList(result);
     }
     
     const handleAddHeadClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        if (value.LinkedNodeList.getSize()) {
+        setIsProcessing(true)
+        setProcessingMode(ADD_HEAD)
+        if (linkedNodeList.getSize()) {
 
             const smallCircleState: CircleProps = {
-                letter: value.nodeStr,
+                letter: nodeStr,
                 state: ElementStates.Changing,
                 isSmall:true
             };
             const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
-            let head = value.LinkedNodeList.getAt(0)
+            let head = linkedNodeList.getAt(0)
             if (head) {
                 head.value.head = smallCircle;
             }
@@ -55,13 +59,13 @@ export const ListPage: React.FC = () => {
             if (head) {
                 head.value.head = null;
             }
-            value.LinkedNodeList.addHead({
-                letter: value.nodeStr,
+            linkedNodeList.addHead({
+                letter: nodeStr,
                 state: ElementStates.Modified
             });
             drawCircles();
             await wait(SMALL_DELAY);
-            head = value.LinkedNodeList.getAt(0)
+            head = linkedNodeList.getAt(0)
             if (head) {
                 head.value.state = ElementStates.Default;
             }
@@ -69,30 +73,34 @@ export const ListPage: React.FC = () => {
         }
         else {
             const newCircleState: CircleProps = {
-                letter: value.nodeStr,
+                letter: nodeStr,
                 state: ElementStates.Modified
             };
-            value.LinkedNodeList.addHead(newCircleState);
+            linkedNodeList.addHead(newCircleState);
             drawCircles();
             await wait(SMALL_DELAY);
-            const head = value.LinkedNodeList.getAt(0)
+            const head = linkedNodeList.getAt(0)
             if (head) {
                 head.value.state = ElementStates.Default;
             }
             drawCircles();
         }
+        setIsProcessing(false)
     };
     const handleAddTailClick = async (event: MouseEvent<HTMLButtonElement>) => {//TODO если будет время, не забыть мигалку зеленым в отдельный метод (4 раза), тело хвоста и конца в один метод
-        const size = value.LinkedNodeList.getSize()
+
+        setIsProcessing(true)
+        setProcessingMode(ADD_TAIL)
+        const size = linkedNodeList.getSize()
         if (size) {
 
             const smallCircleState: CircleProps = {
-                letter: value.nodeStr,
+                letter: nodeStr,
                 state: ElementStates.Changing,
                 isSmall: true
             };
             const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
-            let tail = value.LinkedNodeList.getAt(size - 1);
+            let tail = linkedNodeList.getAt(size - 1);
             if (tail) {
                 tail.value.head = smallCircle;
             }
@@ -101,13 +109,13 @@ export const ListPage: React.FC = () => {
             if (tail) {
                 tail.value.head = null;
             }
-            value.LinkedNodeList.addTail({
-                letter: value.nodeStr,
+            linkedNodeList.addTail({
+                letter: nodeStr,
                 state: ElementStates.Modified
             });
             drawCircles();
             await wait(SMALL_DELAY);
-            tail = value.LinkedNodeList.getAt(size)
+            tail = linkedNodeList.getAt(size)
             if (tail) {
                 tail.value.state = ElementStates.Default;
             }
@@ -115,23 +123,26 @@ export const ListPage: React.FC = () => {
         }
         else {
             const newCircleState: CircleProps = {
-                letter: value.nodeStr,
+                letter: nodeStr,
                 state: ElementStates.Modified
             };
-            value.LinkedNodeList.addHead(newCircleState);
+            linkedNodeList.addHead(newCircleState);
             drawCircles();
             await wait(SMALL_DELAY);
-            const tail = value.LinkedNodeList.getAt(0)
+            const tail = linkedNodeList.getAt(0)
             if (tail) {
                 tail.value.state = ElementStates.Default;
             }
             drawCircles();
         }
+        setIsProcessing(false)
     };
     const handleRemoveHeadClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        const size = value.LinkedNodeList.getSize()
+        setIsProcessing(true)
+        setProcessingMode(REMOVE_HEAD)
+        const size = linkedNodeList.getSize()
         if (size) {
-            const head = value.LinkedNodeList.getAt(0);
+            const head = linkedNodeList.getAt(0);
 
             if (head) {
                 const headValue = head.value.letter;
@@ -146,15 +157,18 @@ export const ListPage: React.FC = () => {
 
                 drawCircles();
                 await wait(SMALL_DELAY);
-                value.LinkedNodeList.removeHead();
+                linkedNodeList.removeHead();
                 drawCircles();
             }
         }
+        setIsProcessing(false)
     };
     const handleRemoveTailClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        const size = value.LinkedNodeList.getSize()
+        setIsProcessing(true)
+        setProcessingMode(REMOVE_TAIL)
+        const size = linkedNodeList.getSize()
         if (size) {
-            const tail = value.LinkedNodeList.getAt(size-1);
+            const tail = linkedNodeList.getAt(size-1);
 
             if (tail) {
                 const headValue = tail.value.letter;
@@ -169,24 +183,27 @@ export const ListPage: React.FC = () => {
 
                 drawCircles();
                 await wait(SMALL_DELAY);
-                value.LinkedNodeList.removeTail();
+                linkedNodeList.removeTail();
                 drawCircles();
             }
         }
+        setIsProcessing(false)
     };
     const handleInsertAtClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        const insertInd = Number(value.indStr);
+        setIsProcessing(true)
+        setProcessingMode(ADD_INDEX)
+        const insertInd = Number(indStr);
         const smallCircleState: CircleProps = {
-            letter: value.nodeStr,
+            letter: nodeStr,
             state: ElementStates.Changing,
             isSmall: true
         };
         const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
-        const size = value.LinkedNodeList.getSize();
+        const size = linkedNodeList.getSize();
 
         if (insertInd <= size) {
             for (let i = 0; i <= insertInd; i++) {
-                const tempNode = value.LinkedNodeList.getAt(i)
+                const tempNode = linkedNodeList.getAt(i)
                 if (tempNode) {
                     tempNode.value.head = smallCircle;
                     drawCircles();
@@ -196,42 +213,45 @@ export const ListPage: React.FC = () => {
                 }
             }
             for (let i = 0; i <= insertInd; i++) {
-                const tempNode = value.LinkedNodeList.getAt(i)
+                const tempNode = linkedNodeList.getAt(i)
                 if (tempNode) {
                     tempNode.value.state = ElementStates.Default;
                 }
             }
             const newCircleState: CircleProps = {
-                letter: value.nodeStr,
+                letter: nodeStr,
                 state: ElementStates.Modified
             };
-            value.LinkedNodeList.insertAt(newCircleState, insertInd);
+            linkedNodeList.insertAt(newCircleState, insertInd);
             drawCircles();
             await wait(SMALL_DELAY);
-            const tail = value.LinkedNodeList.getAt(insertInd)
+            const tail = linkedNodeList.getAt(insertInd)
             if (tail) {
                 tail.value.state = ElementStates.Default;
             }
             drawCircles();
         }
+        setIsProcessing(false)
     };
     const handleRemoveAtClick = async (event: MouseEvent<HTMLButtonElement>) => {
-        const removeInd = Number(value.indStr);
-        const size = value.LinkedNodeList.getSize();
+        setIsProcessing(true)
+        setProcessingMode(REMOVE_INDEX)
+        const removeInd = Number(indStr);
+        const size = linkedNodeList.getSize();
         if (removeInd <= size) {
             for (let i = 0; i < removeInd; i++) {
-                const tempNode = value.LinkedNodeList.getAt(i)
+                const tempNode = linkedNodeList.getAt(i)
                 if (tempNode) {
                     tempNode.value.state = ElementStates.Changing;
                     drawCircles();
                     await wait(SMALL_DELAY);
                 }
             }
-            const tempNode = value.LinkedNodeList.getAt(removeInd);
+            const tempNode = linkedNodeList.getAt(removeInd);
             if (tempNode) {
 
                 for (let i = 0; i <= removeInd; i++) {
-                    const tempNode = value.LinkedNodeList.getAt(i)
+                    const tempNode = linkedNodeList.getAt(i)
                     if (tempNode) {
                         tempNode.value.state = ElementStates.Default;
                     }
@@ -246,36 +266,49 @@ export const ListPage: React.FC = () => {
                 tempNode.value.tail = smallCircle;
                 drawCircles();
                 await wait(SMALL_DELAY);
-                value.LinkedNodeList.removeAt(removeInd);
+                linkedNodeList.removeAt(removeInd);
                 drawCircles();
             }
 
         }
+        setIsProcessing(false)
     };
     const onNodeStrValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue({ ...value, nodeStr: e.target.value });
+        setNodeStr(e.target.value);
     };
     const onIndValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setValue({ ...value, indStr: e.target.value });
+        setIndStr(e.target.value);
     };
   return (
       <SolutionLayout title="Связный список">
           <div>
               <div className={`${styles.inputRow}`}>
-                  <Input maxLength={4} isLimitText={true} value={value.nodeStr} onChange={onNodeStrValueChange}></Input>
-                  <Button text="add to head" onClick={handleAddHeadClick}></Button>
-                  <Button text="add to tail" onClick={handleAddTailClick }></Button>
-                  <Button text="remove head" onClick={handleRemoveHeadClick }></Button>
-                  <Button text="remove tail" onClick={handleRemoveTailClick}></Button>
+                  <Input maxLength={4} isLimitText={true} value={nodeStr} onChange={onNodeStrValueChange}></Input>
+                  <Button text="add to head" onClick={handleAddHeadClick}
+                      isLoader={(processingMode === ADD_HEAD) && isProcessing}
+                      disabled={isProcessing || (nodeStr.length === 0)}></Button>
+                  <Button text="add to tail" onClick={handleAddTailClick}
+                      isLoader={(processingMode === ADD_TAIL) && isProcessing}
+                      disabled={isProcessing || (nodeStr.length === 0)}></Button>
+                  <Button text="remove head" onClick={handleRemoveHeadClick}
+                      isLoader={(processingMode === REMOVE_HEAD) && isProcessing}
+                      disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
+                  <Button text="remove tail" onClick={handleRemoveTailClick}
+                      isLoader={(processingMode === REMOVE_TAIL) && isProcessing}
+                      disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
               </div>
               <div className={`${styles.inputRow}`}>
-                  <Input value={value.indStr} onChange={onIndValueChange}></Input>
-                  <Button text="add at index" onClick={handleInsertAtClick}></Button>
-                  <Button text="remove at index" onClick={handleRemoveAtClick}></Button>
+                  <Input value={indStr} onChange={onIndValueChange}></Input>
+                  <Button text="add at index" onClick={handleInsertAtClick}
+                      isLoader={(processingMode === ADD_INDEX) && isProcessing}
+                      disabled={isProcessing || (nodeStr.length === 0) || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))}></Button>
+                  <Button text="remove at index" onClick={handleRemoveAtClick}
+                      isLoader={(processingMode === REMOVE_INDEX) && isProcessing}
+                      disabled={isProcessing || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))} ></Button>
               </div>
           </div>
           <div className={`${styles.circlesGrid}`}>
-              {value.circlesPropsList.map((circlesProps) => (
+              {circlesPropsList.map((circlesProps) => (
                   <Circle key={uuidv4()} {...circlesProps} />
               ))}
           </div>

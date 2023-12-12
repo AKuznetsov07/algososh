@@ -49,7 +49,6 @@ export class Queue<T> {
         if (this.isEmpty()) {
             throw new Error("No elements in the queue");
         }
-        const item = this.container[this._head]
         delete this.container[this._head]
         this._head++;
         this.length = this.length - 1;
