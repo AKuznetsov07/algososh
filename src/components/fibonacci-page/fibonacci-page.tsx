@@ -62,20 +62,24 @@ export const FibonacciPage: React.FC = () => {
     };
     return (
         <SolutionLayout title="Последовательность Фибоначчи">
-            <div>
-                <div className={`${styles.inputRow}`}>
-                    <Input max={maxValue} isLimitText={true}
-                        onChange={onValueChange}
-                        type="number"
-                        disabled={isProgressing}></Input>
-                    <Button text="Развернуть" onClick={handleCountFibClick}
-                        disabled={isDisabled || isProgressing} isLoader={isProgressing}></Button>
+            <div className={`${styles.pageContent}`}>
+                <div className={`${styles.contentColumn}`}>
+                    <div>
+                        <div className={`${styles.inputRow}`}>
+                            <Input max={maxValue} isLimitText={true}
+                                onChange={onValueChange}
+                                type="number"
+                                disabled={isProgressing}></Input>
+                            <Button text="Развернуть" onClick={handleCountFibClick}
+                                disabled={isDisabled || isProgressing} isLoader={isProgressing}></Button>
+                        </div>
+                    </div>
+                    <ul className={`${styles.circlesGrid}`}>
+                        {fibCirclesPropsList.map((circlesProps) => (
+                            <Circle key={uuidv4()} {...circlesProps} />
+                        ))}
+                    </ul>
                 </div>
-            </div>
-            <div className={`${styles.circlesGrid}`}>
-                {fibCirclesPropsList.map((circlesProps) => (
-                    <Circle key={uuidv4()} {...circlesProps} />
-                ))}
             </div>
         </SolutionLayout>
     );

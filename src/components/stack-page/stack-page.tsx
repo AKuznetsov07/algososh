@@ -58,17 +58,25 @@ export const StackPage: React.FC = () => {
 
 
   return (
-    <SolutionLayout title="Стек">
-          <div className={`${styles.inputRow}`}>
-              <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
-              <Button text="add" onClick={handlePushClick} disabled={inputStr.length === 0}></Button>
-              <Button text="drop" onClick={handlePopClick} disabled={stringStack.getSize()===0}></Button>
-              <Button text="clear" onClick={handleClearClick} disabled={stringStack.getSize() === 0}></Button>
-          </div>
-          <div className={`${styles.circlesGrid}`}>
-              {stringCirclesPropsList.map((circlesProps) => (
-                  <Circle key={uuidv4()} {...circlesProps} />
-              ))}
+      <SolutionLayout title="Стек">
+          <div className={`${styles.pageContent}`}>
+              <div className={`${styles.contentColumn}`}>
+                  <div className={`${styles.inputRow}`}>
+                      <div className={`${styles.controlsGroup}`}>
+                          <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
+                          <Button text="add" onClick={handlePushClick} disabled={inputStr.length === 0}></Button>
+                          <Button text="drop" onClick={handlePopClick} disabled={stringStack.getSize() === 0}></Button>
+                      </div>
+                      <Button text="clear" onClick={handleClearClick} disabled={stringStack.getSize() === 0}></Button>
+                  </div>
+                  <ul className={`${styles.circlesGrid}`}>
+                      {stringCirclesPropsList.map((circlesProps) => (
+                          <li key={uuidv4()}>
+                              <Circle {...circlesProps} />
+                          </li>
+                      ))}
+                  </ul>
+              </div>
           </div>
     </SolutionLayout>
   );

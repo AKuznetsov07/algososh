@@ -90,17 +90,36 @@ export const QueuePage: React.FC = () => {
 
   return (
       <SolutionLayout title="Очередь">
-          <div className={`${styles.inputRow}`}>
-              <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
-              <Button text="add" onClick={handleEnqueueClick} disabled={(inputStr.length === 0) || (stringQueue.getTail() === queueMaxLength - 1)}></Button>
-              <Button text="drop" onClick={handleDequeueClick} disabled={stringQueue.getHead() ===null }></Button>
-              <Button text="clear" onClick={handleClearClick} disabled={stringQueue.getHead() === null}></Button>
+          <div className={`${styles.pageContent}`}>
+              <div className={`${styles.contentColumn}`}>
+                  <div className={`${styles.inputRow}`}>
+                      <div className={`${styles.controlsGroup}`}>
+                          <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
+                          <Button text="add" onClick={handleEnqueueClick} disabled={(inputStr.length === 0) || (stringQueue.getTail() === queueMaxLength - 1)}></Button>
+                          <Button text="drop" onClick={handleDequeueClick} disabled={stringQueue.getHead() === null}></Button>
+                      </div>
+                      <Button text="clear" onClick={handleClearClick} disabled={stringQueue.getHead() === null}></Button>
+                  </div>
+                  <ul className={`${styles.circlesGrid}`}>
+                      {stringCirclesPropsList.map((circlesProps) => (
+                          <li key={uuidv4()}>
+                              <Circle {...circlesProps} />
+                          </li>
+                      ))}
+                  </ul>
+              </div>
           </div>
-          <div className={`${styles.circlesGrid}`}>
-              {stringCirclesPropsList.map((circlesProps) => (
-                  <Circle key={uuidv4()} {...circlesProps} />
-              ))}
-          </div>
+          {/*<div className={`${styles.inputRow}`}>*/}
+          {/*    <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>*/}
+          {/*    <Button text="add" onClick={handleEnqueueClick} disabled={(inputStr.length === 0) || (stringQueue.getTail() === queueMaxLength - 1)}></Button>*/}
+          {/*    <Button text="drop" onClick={handleDequeueClick} disabled={stringQueue.getHead() ===null }></Button>*/}
+          {/*    <Button text="clear" onClick={handleClearClick} disabled={stringQueue.getHead() === null}></Button>*/}
+          {/*</div>*/}
+          {/*<div className={`${styles.circlesGrid}`}>*/}
+          {/*    {stringCirclesPropsList.map((circlesProps) => (*/}
+          {/*        <Circle key={uuidv4()} {...circlesProps} />*/}
+          {/*    ))}*/}
+          {/*</div>*/}
     </SolutionLayout>
   );
 };

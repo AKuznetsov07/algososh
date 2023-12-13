@@ -52,20 +52,26 @@ export const StringComponent: React.FC = () => {
         setEnableValue(false);
     }
   return (
-    <SolutionLayout title="Строка">
-          <div>
-              <div className={`${styles.inputRow}`}>
-                  <Input maxLength={11} isLimitText={true} value={inputStr}
-                      onChange={onValueChange}></Input>
-                  <Button text="Развернуть"
-                      onClick={handleTurnAroundClick}
-                      disabled={isDisabled} isLoader={isDisabled}></Button>
+      <SolutionLayout title="Строка">
+          <div className={`${styles.pageContent}`}>
+              <div className={`${styles.contentColumn}`}>
+                  <div>
+                      <div className={`${styles.inputRow}`}>
+                          <Input maxLength={11} isLimitText={true} value={inputStr}
+                              onChange={onValueChange}></Input>
+                          <Button text="Развернуть"
+                              onClick={handleTurnAroundClick}
+                              disabled={isDisabled} isLoader={isDisabled}></Button>
+                      </div>
+                  </div>
+                  <ul className={`${styles.circlesGrid}`}>
+                      {stringCirclesPropsList.map((circlesProps) => (
+                          <li key={uuidv4()}>
+                              <Circle key={uuidv4()} {...circlesProps} />
+                          </li>
+                      ))}
+                  </ul>
               </div>
-          </div>
-          <div className={`${styles.circlesGrid}`}>
-              {stringCirclesPropsList.map((circlesProps) => (
-                  <Circle key={uuidv4()} {...circlesProps} />
-              ))}
           </div>
     </SolutionLayout>
   );

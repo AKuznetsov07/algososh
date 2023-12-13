@@ -14,19 +14,6 @@ const select = "select";
 const bubble = "bubble";
 
 export const SortingPage: React.FC = () => {
-    //const [value, setValue] = React.useState<{
-    //    selectedOption: string,
-    //    arrColumnList: Array<JSX.Element>,
-    //    unsortedColumnPropsList: Array<ColumnProps>,
-    //    sortingUp: boolean,
-    //    sortingDown: boolean
-    //}>({
-    //    selectedOption: select,
-    //    arrColumnList: [],
-    //    unsortedColumnPropsList: [],
-    //    sortingUp: false,
-    //    sortingDown: false
-    //});
     const [selectedOption, setSelectedOption] = React.useState(select);
     const [arrColumnList, setArrColumnList] = React.useState<Array<JSX.Element>>([]);
     const [unsortedColumnPropsList, setUnsortedColumnPropsList] = React.useState<Array<ColumnProps>>([]);
@@ -148,7 +135,6 @@ export const SortingPage: React.FC = () => {
     const handleDownSortClick = async (event: MouseEvent<HTMLButtonElement>) => {
         ClearColumnsState();
         setSortingDown(true)
-        //setValue({ ...value, sortingDown: true });
         switch (selectedOption) {
             case select:
                 await sortBySelection(false);
@@ -172,18 +158,26 @@ export const SortingPage: React.FC = () => {
 
   return (
     <SolutionLayout title="Сортировка массива">
-          <form>
-              <div className={`${styles.inputRow}`}>
-                  <RadioInput label="select" value={select} checked={selectedOption === select} onChange={handleOptionChange}></RadioInput>
-                  <RadioInput label="bubble" value={bubble} checked={selectedOption === bubble} onChange={handleOptionChange}></RadioInput>
-                  <Button text="Up" onClick={handleUpSortClick} sorting={Direction.Ascending} disabled={sortingUp || sortingDown} isLoader={sortingUp}></Button>
-                  <Button text="down" onClick={handleDownSortClick} sorting={Direction.Descending} disabled={sortingUp || sortingDown} isLoader={sortingDown}></Button>
-                  <Button text="new" onClick={handleNewArrayClick} disabled={sortingUp || sortingDown}></Button>
-              </div>
-              <div className={`${styles.columnsGrid}`}>
-                  {unsortedColumnPropsList.map((columnProps) => (
-                      <Column key={uuidv4()} {...columnProps} />
-                  ))}
+          <form className={`${styles.pageContent}`}>
+              <div className={`${styles.contentColumn}`}>
+                  <div className={`${styles.inputRow}`}>
+                      <div className={`${styles.controlsPair}`}>
+                          <RadioInput label="select" value={select} checked={selectedOption === select} onChange={handleOptionChange}></RadioInput>
+                          <RadioInput label="bubble" value={bubble} checked={selectedOption === bubble} onChange={handleOptionChange}></RadioInput>
+                      </div>
+                      <div className={`${styles.controlsPair}`}>
+                          <Button text="Up" onClick={handleUpSortClick} sorting={Direction.Ascending} disabled={sortingUp || sortingDown} isLoader={sortingUp}></Button>
+                          <Button text="down" onClick={handleDownSortClick} sorting={Direction.Descending} disabled={sortingUp || sortingDown} isLoader={sortingDown}></Button>
+                      </div>
+                      <Button text="new" onClick={handleNewArrayClick} disabled={sortingUp || sortingDown}></Button>
+                  </div>
+                  <ul className={`${styles.columnsRow}`}>
+                      {unsortedColumnPropsList.map((columnProps) => (
+                          <li key={uuidv4()}>
+                              <Column {...columnProps} />
+                          </li>
+                      ))}
+                  </ul>
               </div>
           </form>
     </SolutionLayout>

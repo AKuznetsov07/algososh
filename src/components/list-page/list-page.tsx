@@ -9,6 +9,7 @@ import { ElementStates } from "../../types/element-states";
 import { v4 as uuidv4 } from "uuid";
 import { wait } from "../../utils/utils";
 import { ADD_HEAD, ADD_INDEX, ADD_TAIL, REMOVE_HEAD, REMOVE_INDEX, REMOVE_TAIL, SMALL_DELAY } from "../../utils/constants";
+import { ArrowIcon } from "../ui/icons/arrow-icon";
 
 export const ListPage: React.FC = () => {
     const [indStr, setIndStr] = React.useState<string>("");
@@ -281,36 +282,46 @@ export const ListPage: React.FC = () => {
     };
   return (
       <SolutionLayout title="Связный список">
-          <div>
-              <div className={`${styles.inputRow}`}>
-                  <Input maxLength={4} isLimitText={true} value={nodeStr} onChange={onNodeStrValueChange}></Input>
-                  <Button text="add to head" onClick={handleAddHeadClick}
-                      isLoader={(processingMode === ADD_HEAD) && isProcessing}
-                      disabled={isProcessing || (nodeStr.length === 0)}></Button>
-                  <Button text="add to tail" onClick={handleAddTailClick}
-                      isLoader={(processingMode === ADD_TAIL) && isProcessing}
-                      disabled={isProcessing || (nodeStr.length === 0)}></Button>
-                  <Button text="remove head" onClick={handleRemoveHeadClick}
-                      isLoader={(processingMode === REMOVE_HEAD) && isProcessing}
-                      disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
-                  <Button text="remove tail" onClick={handleRemoveTailClick}
-                      isLoader={(processingMode === REMOVE_TAIL) && isProcessing}
-                      disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
+          <div className={`${styles.pageContent}`}>
+              <div className={`${styles.contentColumn}`}>
+                  <div>
+                      <div className={`${styles.inputRow}`}>
+                          <Input extraClass={`${styles.inputControl}`} maxLength={4} isLimitText={true} value={nodeStr} onChange={onNodeStrValueChange}></Input>
+                          <Button extraClass={`${styles.Button}`} text="add to head" onClick={handleAddHeadClick}
+                              isLoader={(processingMode === ADD_HEAD) && isProcessing}
+                              disabled={isProcessing || (nodeStr.length === 0)}></Button>
+                          <Button extraClass={`${styles.Button}`} text="add to tail" onClick={handleAddTailClick}
+                              isLoader={(processingMode === ADD_TAIL) && isProcessing}
+                              disabled={isProcessing || (nodeStr.length === 0)}></Button>
+                          <Button extraClass={`${styles.Button}`} text="remove head" onClick={handleRemoveHeadClick}
+                              isLoader={(processingMode === REMOVE_HEAD) && isProcessing}
+                              disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
+                          <Button extraClass={`${styles.Button}`} text="remove tail" onClick={handleRemoveTailClick}
+                              isLoader={(processingMode === REMOVE_TAIL) && isProcessing}
+                              disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
+                      </div>
+                      <div className={`${styles.inputRow}`}>
+                          <Input extraClass={`${styles.inputControl}`} value={indStr} onChange={onIndValueChange}></Input>
+                          <Button extraClass={`${styles.wideButton}`} text="add at index" onClick={handleInsertAtClick}
+                              isLoader={(processingMode === ADD_INDEX) && isProcessing}
+                              disabled={isProcessing || (nodeStr.length === 0) || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))}></Button>
+                          <Button extraClass={`${styles.wideButton}`} text="remove at index" onClick={handleRemoveAtClick}
+                              isLoader={(processingMode === REMOVE_INDEX) && isProcessing}
+                              disabled={isProcessing || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))} ></Button>
+                      </div>
+                  </div>
+                  <ul className={`${styles.circlesGrid}`}>
+                      {circlesPropsList.map((circlesProps,ind) => (
+                          <li key={uuidv4()} className={`${styles.listNode}`}>
+                              <Circle {...circlesProps} />
+                              {circlesPropsList.length - 1 !== ind &&
+                                  <div className={`${styles.arrowBlock}`}>
+                                      <ArrowIcon />
+                                  </div>}
+                          </li>
+                      ))}
+                  </ul>
               </div>
-              <div className={`${styles.inputRow}`}>
-                  <Input value={indStr} onChange={onIndValueChange}></Input>
-                  <Button text="add at index" onClick={handleInsertAtClick}
-                      isLoader={(processingMode === ADD_INDEX) && isProcessing}
-                      disabled={isProcessing || (nodeStr.length === 0) || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))}></Button>
-                  <Button text="remove at index" onClick={handleRemoveAtClick}
-                      isLoader={(processingMode === REMOVE_INDEX) && isProcessing}
-                      disabled={isProcessing || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))} ></Button>
-              </div>
-          </div>
-          <div className={`${styles.circlesGrid}`}>
-              {circlesPropsList.map((circlesProps) => (
-                  <Circle key={uuidv4()} {...circlesProps} />
-              ))}
           </div>
     </SolutionLayout>
   );
