@@ -287,25 +287,25 @@ export const ListPage: React.FC = () => {
                   <div>
                       <div className={`${styles.inputRow}`}>
                           <Input extraClass={`${styles.inputControl}`} maxLength={4} isLimitText={true} value={nodeStr} onChange={onNodeStrValueChange}></Input>
-                          <Button extraClass={`${styles.Button}`} text="add to head" onClick={handleAddHeadClick}
+                          <Button extraClass={`${styles.Button}`} text="Добавить в head" onClick={handleAddHeadClick}
                               isLoader={(processingMode === ADD_HEAD) && isProcessing}
                               disabled={isProcessing || (nodeStr.length === 0)}></Button>
-                          <Button extraClass={`${styles.Button}`} text="add to tail" onClick={handleAddTailClick}
+                          <Button extraClass={`${styles.Button}`} text="Добавить в tail" onClick={handleAddTailClick}
                               isLoader={(processingMode === ADD_TAIL) && isProcessing}
                               disabled={isProcessing || (nodeStr.length === 0)}></Button>
-                          <Button extraClass={`${styles.Button}`} text="remove head" onClick={handleRemoveHeadClick}
+                          <Button extraClass={`${styles.Button}`} text="Удалить из head" onClick={handleRemoveHeadClick}
                               isLoader={(processingMode === REMOVE_HEAD) && isProcessing}
                               disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
-                          <Button extraClass={`${styles.Button}`} text="remove tail" onClick={handleRemoveTailClick}
+                          <Button extraClass={`${styles.Button}`} text="Удалить из tail" onClick={handleRemoveTailClick}
                               isLoader={(processingMode === REMOVE_TAIL) && isProcessing}
                               disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
                       </div>
                       <div className={`${styles.inputRow}`}>
                           <Input extraClass={`${styles.inputControl}`} value={indStr} onChange={onIndValueChange}></Input>
-                          <Button extraClass={`${styles.wideButton}`} text="add at index" onClick={handleInsertAtClick}
+                          <Button extraClass={`${styles.wideButton}`} text="Добавить по индексу" onClick={handleInsertAtClick}
                               isLoader={(processingMode === ADD_INDEX) && isProcessing}
                               disabled={isProcessing || (nodeStr.length === 0) || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))}></Button>
-                          <Button extraClass={`${styles.wideButton}`} text="remove at index" onClick={handleRemoveAtClick}
+                          <Button extraClass={`${styles.wideButton}`} text="Удалить по индексу" onClick={handleRemoveAtClick}
                               isLoader={(processingMode === REMOVE_INDEX) && isProcessing}
                               disabled={isProcessing || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))} ></Button>
                       </div>

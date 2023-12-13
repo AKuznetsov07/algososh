@@ -162,14 +162,14 @@ export const SortingPage: React.FC = () => {
               <div className={`${styles.contentColumn}`}>
                   <div className={`${styles.inputRow}`}>
                       <div className={`${styles.controlsPair}`}>
-                          <RadioInput label="select" value={select} checked={selectedOption === select} onChange={handleOptionChange}></RadioInput>
-                          <RadioInput label="bubble" value={bubble} checked={selectedOption === bubble} onChange={handleOptionChange}></RadioInput>
+                          <RadioInput label="Выбор" value={select} checked={selectedOption === select} onChange={handleOptionChange}></RadioInput>
+                          <RadioInput label="Пузырёк" value={bubble} checked={selectedOption === bubble} onChange={handleOptionChange}></RadioInput>
                       </div>
                       <div className={`${styles.controlsPair}`}>
-                          <Button text="Up" onClick={handleUpSortClick} sorting={Direction.Ascending} disabled={sortingUp || sortingDown} isLoader={sortingUp}></Button>
-                          <Button text="down" onClick={handleDownSortClick} sorting={Direction.Descending} disabled={sortingUp || sortingDown} isLoader={sortingDown}></Button>
+                          <Button text="По возрастанию" onClick={handleUpSortClick} sorting={Direction.Ascending} disabled={sortingUp || sortingDown} isLoader={sortingUp}></Button>
+                          <Button text="По убыванию" onClick={handleDownSortClick} sorting={Direction.Descending} disabled={sortingUp || sortingDown} isLoader={sortingDown}></Button>
                       </div>
-                      <Button text="new" onClick={handleNewArrayClick} disabled={sortingUp || sortingDown}></Button>
+                      <Button text="Новый массив" onClick={handleNewArrayClick} disabled={sortingUp || sortingDown}></Button>
                   </div>
                   <ul className={`${styles.columnsRow}`}>
                       {unsortedColumnPropsList.map((columnProps) => (

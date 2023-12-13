@@ -64,10 +64,10 @@ export const StackPage: React.FC = () => {
                   <div className={`${styles.inputRow}`}>
                       <div className={`${styles.controlsGroup}`}>
                           <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
-                          <Button text="add" onClick={handlePushClick} disabled={inputStr.length === 0}></Button>
-                          <Button text="drop" onClick={handlePopClick} disabled={stringStack.getSize() === 0}></Button>
+                          <Button text="Добавить" onClick={handlePushClick} disabled={inputStr.length === 0}></Button>
+                          <Button text="Удалить" onClick={handlePopClick} disabled={stringStack.getSize() === 0}></Button>
                       </div>
-                      <Button text="clear" onClick={handleClearClick} disabled={stringStack.getSize() === 0}></Button>
+                      <Button text="Очистить" onClick={handleClearClick} disabled={stringStack.getSize() === 0}></Button>
                   </div>
                   <ul className={`${styles.circlesGrid}`}>
                       {stringCirclesPropsList.map((circlesProps) => (
