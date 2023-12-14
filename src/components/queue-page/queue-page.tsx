@@ -6,9 +6,9 @@ import { Queue } from "../../utils/linearCollection";
 import { Circle, CircleProps } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
 import { Button } from "../ui/button/button";
-import { v4 as uuidv4 } from "uuid";
+
 import { wait } from "../../utils/utils";
-import { SMALL_DELAY } from "../../utils/constants";
+import { ADD_BUTTON, REMOVE_BUTTON, SMALL_DELAY } from "../../utils/constants";
 
 export const QueuePage: React.FC = () => {
     const queueMaxLength = 7;
@@ -16,6 +16,9 @@ export const QueuePage: React.FC = () => {
     const [inputStr, setInputStr] = React.useState<string>("");
     const [stringQueue, setStringQueue] = React.useState<Queue<string>>(new Queue<string>(queueMaxLength));
     const [stringCirclesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
+    const [isProcessing, setIsProcessing] = React.useState(false);
+    ///
+    const [processingMode, setProcessingMode] = React.useState("");
     useEffect(() => {
         drawCircles(false);
     },[])
@@ -24,6 +27,8 @@ export const QueuePage: React.FC = () => {
         setInputStr(e.target.value);
     };
     const handleEnqueueClick = async (event: MouseEvent<HTMLButtonElement>) => {
+        setProcessingMode(ADD_BUTTON)
+        setIsProcessing(true);
         let tailIndex = stringQueue.getTail();
         if (tailIndex !== null) {
             tailIndex++;
@@ -36,8 +41,11 @@ export const QueuePage: React.FC = () => {
         stringQueue.enqueue(inputStr);
         await wait(SMALL_DELAY);
         drawCircles(false);
+        setIsProcessing(false);
     };
     const handleDequeueClick = async (event: MouseEvent<HTMLButtonElement>) => {
+        setProcessingMode(REMOVE_BUTTON)
+        setIsProcessing(true);
         let headIndex = stringQueue.getHead();
         if (headIndex===null) {
             headIndex = 0;
@@ -46,6 +54,7 @@ export const QueuePage: React.FC = () => {
         stringQueue.dequeue();
         await wait(SMALL_DELAY);
         drawCircles(false);
+        setIsProcessing(false);
     };
     const handleClearClick = async (event: MouseEvent<HTMLButtonElement>) => {
         setStringQueue(new Queue<string>(queueMaxLength));
@@ -95,14 +104,20 @@ export const QueuePage: React.FC = () => {
                   <div className={`${styles.inputRow}`}>
                       <div className={`${styles.controlsGroup}`}>
                           <Input maxLength={4} isLimitText={true} value={inputStr} onChange={onValueChange}></Input>
-                          <Button text="Добавить" onClick={handleEnqueueClick} disabled={(inputStr.length === 0) || (stringQueue.getTail() === queueMaxLength - 1)}></Button>
-                          <Button text="Удалить" onClick={handleDequeueClick} disabled={stringQueue.getHead() === null}></Button>
+                          <Button text="Добавить"
+                              onClick={handleEnqueueClick}
+                              disabled={isProcessing || (inputStr.length === 0) || (stringQueue.getTail() === queueMaxLength - 1)}
+                              isLoader={(processingMode === ADD_BUTTON) && isProcessing}></Button>
+                          <Button text="Удалить"
+                              onClick={handleDequeueClick}
+                              disabled={isProcessing || stringQueue.getHead() === null}
+                              isLoader={(processingMode === REMOVE_BUTTON) && isProcessing}></Button>
                       </div>
-                      <Button text="Очистить" onClick={handleClearClick} disabled={stringQueue.getHead() === null}></Button>
+                      <Button text="Очистить" onClick={handleClearClick} disabled={isProcessing || (stringQueue.getHead() === null)}></Button>
                   </div>
                   <ul className={`${styles.circlesGrid}`}>
-                      {stringCirclesPropsList.map((circlesProps) => (
-                          <li key={uuidv4()}>
+                      {stringCirclesPropsList.map((circlesProps,ind) => (
+                          <li key={ind}>
                               <Circle {...circlesProps} />
                           </li>
                       ))}

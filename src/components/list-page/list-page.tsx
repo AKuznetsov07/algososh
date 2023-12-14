@@ -1,4 +1,4 @@
-import React, { ChangeEvent, MouseEvent } from "react";
+import React, { ChangeEvent, MouseEvent, useEffect } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -6,7 +6,7 @@ import styles from "./list-page.module.css";
 import { Circle, CircleProps } from "../ui/circle/circle";
 import { LinkedList } from "../../utils/linearCollection";
 import { ElementStates } from "../../types/element-states";
-import { v4 as uuidv4 } from "uuid";
+
 import { wait } from "../../utils/utils";
 import { ADD_HEAD, ADD_INDEX, ADD_TAIL, REMOVE_HEAD, REMOVE_INDEX, REMOVE_TAIL, SMALL_DELAY } from "../../utils/constants";
 import { ArrowIcon } from "../ui/icons/arrow-icon";
@@ -17,15 +17,20 @@ export const ListPage: React.FC = () => {
     const [linkedNodeList, setLinkedNodeList] = React.useState<LinkedList<CircleProps>>(new LinkedList());
     const [circlesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
     const [isProcessing, setIsProcessing] = React.useState(false);
-    ///
-    //const [isHeadAdding, setIsHeadAdding] = React.useState(false);
-    //const [isTailAdding, setIsTailAdding] = React.useState(false);
-    //const [isHeadRemoving, setIsHeadRemoving] = React.useState(false);
-    //const [isTailRemoving, setIsTailRemoving] = React.useState(false);
-    //const [isIndexAdding, setIsIndexAdding] = React.useState(false);
-    //const [isIndexRemoving, setIsIndexRemoving] = React.useState(false);
-    ///
+
     const [processingMode, setProcessingMode] = React.useState("");
+
+    useEffect(() => {
+        for (let i = 0; i < 5; i++) {
+
+            linkedNodeList.addHead({
+                letter: Math.floor(Math.random() * 9999).toString(),
+                state: ElementStates.Default
+            });
+        }
+        drawCircles();
+    }, [])
+
     function drawCircles() {
         const result: CircleProps[] = [];
         let tempNode = linkedNodeList.getAt(0)
@@ -50,7 +55,7 @@ export const ListPage: React.FC = () => {
                 state: ElementStates.Changing,
                 isSmall:true
             };
-            const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
+            const smallCircle = <Circle key={-1} {...smallCircleState} />
             let head = linkedNodeList.getAt(0)
             if (head) {
                 head.value.head = smallCircle;
@@ -100,7 +105,7 @@ export const ListPage: React.FC = () => {
                 state: ElementStates.Changing,
                 isSmall: true
             };
-            const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
+            const smallCircle = <Circle key={-1} {...smallCircleState} />
             let tail = linkedNodeList.getAt(size - 1);
             if (tail) {
                 tail.value.head = smallCircle;
@@ -153,7 +158,7 @@ export const ListPage: React.FC = () => {
                     state: ElementStates.Changing,
                     isSmall: true
                 };
-                const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
+                const smallCircle = <Circle key={-1} {...smallCircleState} />
                 head.value.tail = smallCircle;
 
                 drawCircles();
@@ -179,7 +184,7 @@ export const ListPage: React.FC = () => {
                     state: ElementStates.Changing,
                     isSmall: true
                 };
-                const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
+                const smallCircle = <Circle key={-1} {...smallCircleState} />
                 tail.value.tail = smallCircle;
 
                 drawCircles();
@@ -199,7 +204,7 @@ export const ListPage: React.FC = () => {
             state: ElementStates.Changing,
             isSmall: true
         };
-        const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
+        const smallCircle = <Circle key={-1} {...smallCircleState} />
         const size = linkedNodeList.getSize();
 
         if (insertInd <= size) {
@@ -262,7 +267,7 @@ export const ListPage: React.FC = () => {
                     state: ElementStates.Changing,
                     isSmall: true
                 };
-                const smallCircle = <Circle key={uuidv4()} {...smallCircleState} />
+                const smallCircle = <Circle key={-1} {...smallCircleState} />
                 tempNode.value.letter = "";
                 tempNode.value.tail = smallCircle;
                 drawCircles();
@@ -301,7 +306,7 @@ export const ListPage: React.FC = () => {
                               disabled={isProcessing || (linkedNodeList.getSize() === 0)}></Button>
                       </div>
                       <div className={`${styles.inputRow}`}>
-                          <Input extraClass={`${styles.inputControl}`} value={indStr} onChange={onIndValueChange}></Input>
+                          <Input type="number" extraClass={`${styles.inputControl}`} value={indStr} onChange={onIndValueChange}></Input>
                           <Button extraClass={`${styles.wideButton}`} text="Добавить по индексу" onClick={handleInsertAtClick}
                               isLoader={(processingMode === ADD_INDEX) && isProcessing}
                               disabled={isProcessing || (nodeStr.length === 0) || (indStr.length === 0) || (linkedNodeList.getSize() < Number(indStr))}></Button>
@@ -312,7 +317,7 @@ export const ListPage: React.FC = () => {
                   </div>
                   <ul className={`${styles.circlesGrid}`}>
                       {circlesPropsList.map((circlesProps,ind) => (
-                          <li key={uuidv4()} className={`${styles.listNode}`}>
+                          <li key={ind} className={`${styles.listNode}`}>
                               <Circle {...circlesProps} />
                               {circlesPropsList.length - 1 !== ind &&
                                   <div className={`${styles.arrowBlock}`}>

@@ -4,7 +4,7 @@ import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import { Circle, CircleProps } from "../ui/circle/circle";
 import styles from "./fibonacci-page.module.css";
-import { v4 as uuidv4 } from "uuid";
+
 import { wait } from "../../utils/utils";
 import { NORMAL_DELAY } from "../../utils/constants";
 
@@ -66,7 +66,7 @@ export const FibonacciPage: React.FC = () => {
                 <div className={`${styles.contentColumn}`}>
                     <div>
                         <div className={`${styles.inputRow}`}>
-                            <Input max={maxValue} isLimitText={true}
+                            <Input max={maxValue} isLimitText={true} value={inputInt}
                                 onChange={onValueChange}
                                 type="number"
                                 disabled={isProgressing}></Input>
@@ -75,8 +75,8 @@ export const FibonacciPage: React.FC = () => {
                         </div>
                     </div>
                     <ul className={`${styles.circlesGrid}`}>
-                        {fibCirclesPropsList.map((circlesProps) => (
-                            <Circle key={uuidv4()} {...circlesProps} />
+                        {fibCirclesPropsList.map((circlesProps,ind) => (
+                            <Circle key={ind} {...circlesProps} />
                         ))}
                     </ul>
                 </div>

@@ -1,11 +1,11 @@
-import React, { ChangeEvent, MouseEvent } from "react";
+import React, { ChangeEvent, MouseEvent, useEffect } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { RadioInput } from "../ui/radio-input/radio-input";
 import { Button } from "../ui/button/button";
 import styles from "./sorting-page.module.css";
 import { Column, ColumnProps } from "../ui/column/column";
 import { ElementStates } from "../../types/element-states";
-import { v4 as uuidv4 } from "uuid";
+
 import { Direction } from "../../types/direction";
 import { wait } from "../../utils/utils";
 import { NORMAL_DELAY, SMALL_DELAY } from "../../utils/constants";
@@ -19,6 +19,11 @@ export const SortingPage: React.FC = () => {
     const [unsortedColumnPropsList, setUnsortedColumnPropsList] = React.useState<Array<ColumnProps>>([]);
     const [sortingUp, setSortingUp] = React.useState(false);
     const [sortingDown, setSortingDown] = React.useState(false);
+
+
+    useEffect(() => {
+        generateNew();
+    }, [])
 
     function randomArr(arrLength: number) {
         const result: number[] = [];
@@ -98,6 +103,9 @@ export const SortingPage: React.FC = () => {
     }
 
     const handleNewArrayClick = (event: MouseEvent<HTMLButtonElement>) => {
+        generateNew();
+    };
+    function generateNew() {
         const propResult: ColumnProps[] = [];
         const length = Math.floor(Math.random() * 15) + 3;
         const newArr = randomArr(length)
@@ -110,13 +118,14 @@ export const SortingPage: React.FC = () => {
 
         const colResult: Array<JSX.Element> = [];
         for (let i = 0; i < propResult.length; i++) {
-            let newColumnState = <Column key={uuidv4()} {...propResult[i]} />
+            let newColumnState = <Column key={i} {...propResult[i]} />
             colResult.push(newColumnState)
         }
 
         setArrColumnList(colResult)
         setUnsortedColumnPropsList(propResult)
-    };
+
+    }
     const handleUpSortClick = async (event: MouseEvent<HTMLButtonElement>) => {
         ClearColumnsState();
         setSortingUp(true)
@@ -172,8 +181,8 @@ export const SortingPage: React.FC = () => {
                       <Button text="Новый массив" onClick={handleNewArrayClick} disabled={sortingUp || sortingDown}></Button>
                   </div>
                   <ul className={`${styles.columnsRow}`}>
-                      {unsortedColumnPropsList.map((columnProps) => (
-                          <li key={uuidv4()}>
+                      {unsortedColumnPropsList.map((columnProps,ind) => (
+                          <li key={ind}>
                               <Column {...columnProps} />
                           </li>
                       ))}

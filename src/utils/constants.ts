@@ -8,3 +8,6 @@ export const ADD_INDEX = "ADD_INDEX";
 export const REMOVE_HEAD = "REMOVE_HEAD";
 export const REMOVE_TAIL = "REMOVE_TAIL";
 export const REMOVE_INDEX = "REMOVE_INDEX";
+
+export const ADD_BUTTON = "ADD_BUTTON";
+export const REMOVE_BUTTON = "REMOVE_BUTTON";

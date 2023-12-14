@@ -4,7 +4,7 @@ import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import styles from "./string.module.css";
 import { Circle, CircleProps } from "../ui/circle/circle";
-import { v4 as uuidv4 } from "uuid";
+
 import { ElementStates } from "../../types/element-states";
 import { wait } from "../../utils/utils";
 import { NORMAL_DELAY } from "../../utils/constants";
@@ -61,13 +61,13 @@ export const StringComponent: React.FC = () => {
                               onChange={onValueChange}></Input>
                           <Button text="Развернуть"
                               onClick={handleTurnAroundClick}
-                              disabled={isDisabled} isLoader={isDisabled}></Button>
+                              disabled={isDisabled && inputStr!==""} isLoader={isDisabled}></Button>
                       </div>
                   </div>
                   <ul className={`${styles.circlesGrid}`}>
-                      {stringCirclesPropsList.map((circlesProps) => (
-                          <li key={uuidv4()}>
-                              <Circle key={uuidv4()} {...circlesProps} />
+                      {stringCirclesPropsList.map((circlesProps, ind) => (
+                          <li key={ind}>
+                              <Circle {...circlesProps} />
                           </li>
                       ))}
                   </ul>
