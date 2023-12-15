@@ -61,7 +61,7 @@ export const StringComponent: React.FC = () => {
                               onChange={onValueChange}></Input>
                           <Button text="Развернуть"
                               onClick={handleTurnAroundClick}
-                              disabled={isDisabled && inputStr!==""} isLoader={isDisabled}></Button>
+                              disabled={isDisabled || inputStr===""} isLoader={isDisabled}></Button>
                       </div>
                   </div>
                   <ul className={`${styles.circlesGrid}`}>

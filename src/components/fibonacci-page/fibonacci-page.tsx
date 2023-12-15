@@ -10,7 +10,7 @@ import { NORMAL_DELAY } from "../../utils/constants";
 
 export const FibonacciPage: React.FC = () => {
     const maxValue = 19;
-    const [inputInt, setInputInt] = React.useState<number | undefined>(undefined);
+    const [inputInt, setInputInt] = React.useState<string>("");
     const [fibCirclesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
     const [isDisabled, setIsDisabledValue] = React.useState(true);
     const [isProgressing, setProgressingValue] = React.useState(false);
@@ -18,8 +18,9 @@ export const FibonacciPage: React.FC = () => {
 
     const handleCountFibClick = async (event: MouseEvent<HTMLButtonElement>) => {
         setProgressingValue(true);
-        if (inputInt) {
-            await drawNumber(inputInt);
+        const int = Number(inputInt)
+        if (int) {
+            await drawNumber(int);
         }
         setProgressingValue(false);
     };
@@ -53,7 +54,7 @@ export const FibonacciPage: React.FC = () => {
     const onValueChange = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = Number(e.target.value)
         if (newValue >= 0 && newValue <= maxValue) {
-            setInputInt(newValue);
+            setInputInt(e.target.value);
             setIsDisabledValue(false);
         }
         else {
@@ -70,7 +71,7 @@ export const FibonacciPage: React.FC = () => {
                                 onChange={onValueChange}
                                 type="number"
                                 disabled={isProgressing}></Input>
-                            <Button text="Развернуть" onClick={handleCountFibClick}
+                            <Button text="Рассчитать" onClick={handleCountFibClick}
                                 disabled={isDisabled || isProgressing} isLoader={isProgressing}></Button>
                         </div>
                     </div>
