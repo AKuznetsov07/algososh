@@ -5,7 +5,8 @@ import styles from "./solution-layout.module.css";
 
 interface SolutionLayoutProps {
   title: string;
-  extraClass?: string;
+    extraClass?: string;
+    children?: React.ReactNode
 }
 
 export const SolutionLayout: React.FC<SolutionLayoutProps> = ({
