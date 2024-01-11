@@ -9,8 +9,8 @@ import { ElementStates } from "../../types/element-states";
 import { wait } from "../../utils/utils";
 import { NORMAL_DELAY } from "../../utils/constants";
 
-export const StringComponent: React.FC = () => {
-    const [inputStr, setInputStrValue] = React.useState<string>("");
+export const StringComponent: React.FC<{ isDebugging?: boolean, defaultString?: string }> = ({ isDebugging = false, defaultString =""}) => {
+    const [inputStr, setInputStrValue] = React.useState<string>(defaultString);
     const [stringCirclesPropsList, setPropsList] = React.useState<Array<CircleProps>>([]);
     const [isDisabled, setEnableValue] = React.useState<boolean>(false);
 
@@ -32,34 +32,44 @@ export const StringComponent: React.FC = () => {
 
     async function reverseStep(stringCircles: Array<CircleProps>) {
         setEnableValue(true);
-        const mid = Math.floor(stringCircles.length / 2);
+        let mid = Math.floor(stringCircles.length / 2);
+        if (stringCircles.length === 2*mid) {
+            mid -=1;
+        }
 
         for (let index = 0; index <= mid; index++) {
             let reverseInd = stringCircles.length - 1 - index;
-            if (reverseInd !== index) {
-                stringCircles[index].state = ElementStates.Changing;
-                stringCircles[reverseInd].state = ElementStates.Changing;
-                setPropsList([...stringCircles]);
+            if (!isDebugging) {
+                if (reverseInd !== index) {
+                    stringCircles[index].state = ElementStates.Changing;
+                    stringCircles[reverseInd].state = ElementStates.Changing;
+                    setPropsList([...stringCircles]);
+                }
+                await wait(NORMAL_DELAY);
+                stringCircles[index].state = ElementStates.Modified;
+                stringCircles[reverseInd].state = ElementStates.Modified;
             }
-            await wait(NORMAL_DELAY);
-            stringCircles[index].state = ElementStates.Modified;
-            stringCircles[reverseInd].state = ElementStates.Modified;
             const temp = stringCircles[index];
             stringCircles[index] = stringCircles[reverseInd];
             stringCircles[reverseInd] = temp;
             setPropsList([...stringCircles]);
         }
         setEnableValue(false);
+        if (isDebugging) {
+            let result = "";
+            stringCircles.forEach((element) => { result += element.letter })
+            alert(result)
+        }
     }
-  return (
-      <SolutionLayout title="Строка">
+    return (
+        <SolutionLayout title="Строка">
           <div className={`${styles.pageContent}`}>
               <div className={`${styles.contentColumn}`}>
                   <div>
                       <div className={`${styles.inputRow}`}>
                           <Input maxLength={11} isLimitText={true} value={inputStr}
                               onChange={onValueChange}></Input>
-                          <Button text="Развернуть"
+                            <Button text="Развернуть" data-testid="fireAlgorithmButton"
                               onClick={handleTurnAroundClick}
                               disabled={isDisabled || inputStr===""} isLoader={isDisabled}></Button>
                       </div>
