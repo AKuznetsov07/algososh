@@ -1,15 +1,14 @@
 //constants
 export const NORMAL_DELAY: number = 1000;
 export const SMALL_DELAY: number = 500;
-//colors
 
+//colors
 export const defaultColor = 'rgb(127, 224, 81)';//'#0032ff';
 export const changingColor = 'd252e1';
 export const modifiedColor = '7fe051';
 //--default -color: #0032ff;
 //--changing - color: #d252e1;
 //--modified - color: #7fe051;
-
 
 //Pages
 export const mainPage = '[data-cy="main-page"]';
@@ -43,3 +42,9 @@ export const reverseButton = '[data-cy="reverse-button"]';
 
 //fibonacci selectors
 export const countButton = '[data-cy="count-button"]';
+
+//stack selectors
+export const addButton = '[data-cy="add-button"]';
+export const removeButton = '[data-cy="remove-button"]';
+export const clearButton = '[data-cy="clear-button"]';
+
