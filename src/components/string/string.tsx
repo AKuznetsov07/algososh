@@ -37,6 +37,11 @@ export const StringComponent: React.FC<{ isDebugging?: boolean, defaultString?: 
             mid -=1;
         }
 
+        if (!isDebugging) {
+            setPropsList([...stringCircles]);
+            await wait(NORMAL_DELAY);
+        }
+
         for (let index = 0; index <= mid; index++) {
             let reverseInd = stringCircles.length - 1 - index;
             if (!isDebugging) {
@@ -67,17 +72,17 @@ export const StringComponent: React.FC<{ isDebugging?: boolean, defaultString?: 
               <div className={`${styles.contentColumn}`}>
                   <div>
                       <div className={`${styles.inputRow}`}>
-                          <Input maxLength={11} isLimitText={true} value={inputStr}
+                            <Input maxLength={11} isLimitText={true} value={inputStr} data-cy="main-input"
                               onChange={onValueChange}></Input>
-                            <Button text="Развернуть" data-testid="fireAlgorithmButton"
+                            <Button text="Развернуть" data-testid="fireAlgorithmButton" data-cy="reverse-button"
                               onClick={handleTurnAroundClick}
                               disabled={isDisabled || inputStr===""} isLoader={isDisabled}></Button>
                       </div>
                   </div>
-                  <ul className={`${styles.circlesGrid}`}>
+                    <ul className={`${styles.circlesGrid}`} data-cy="visualization-grid">
                       {stringCirclesPropsList.map((circlesProps, ind) => (
-                          <li key={ind}>
-                              <Circle {...circlesProps} />
+                          <li key={ind} data-cy="visualization-element" >
+                              <Circle {...circlesProps}/>
                           </li>
                       ))}
                   </ul>

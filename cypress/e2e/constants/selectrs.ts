@@ -1,3 +1,16 @@
+//constants
+export const NORMAL_DELAY: number = 1000;
+export const SMALL_DELAY: number = 500;
+//colors
+
+export const defaultColor = 'rgb(127, 224, 81)';//'#0032ff';
+export const changingColor = 'd252e1';
+export const modifiedColor = '7fe051';
+//--default -color: #0032ff;
+//--changing - color: #d252e1;
+//--modified - color: #7fe051;
+
+
 //Pages
 export const mainPage = '[data-cy="main-page"]';
 
@@ -16,5 +29,14 @@ export const stackLink = '[data-cy="stack-link"]';
 export const queueLink = '[data-cy="queue-link"]';
 export const listLink = '[data-cy="list-link"]';
 
-//common button selectors
+//common selectors
 export const returnButton = '[data-cy="return-button"]';
+export const pageMainInput = '[data-cy="main-input"]';
+export const visualizationGrid = '[data-cy="visualization-grid"]';
+export const visualizationElement = '[data-cy="visualization-element"]';
+export const circle = '[data-cy="circle"]';
+export const circleBorder = '[data-cy="circle-border"]';
+export const circleText = '[data-cy="circle-text"]';
+
+// recursion selectors
+export const reverseButton = '[data-cy="reverse-button"]';
