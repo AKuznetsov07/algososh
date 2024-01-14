@@ -69,15 +69,17 @@ export const FibonacciPage: React.FC = () => {
                         <div className={`${styles.inputRow}`}>
                             <Input max={maxValue} isLimitText={true} value={inputInt}
                                 onChange={onValueChange}
-                                type="number"
+                                type="number" data-cy="main-input"
                                 disabled={isProgressing}></Input>
-                            <Button text="Рассчитать" onClick={handleCountFibClick}
+                            <Button text="Рассчитать" onClick={handleCountFibClick} data-cy="count-button"
                                 disabled={isDisabled || isProgressing} isLoader={isProgressing}></Button>
                         </div>
                     </div>
-                    <ul className={`${styles.circlesGrid}`}>
-                        {fibCirclesPropsList.map((circlesProps,ind) => (
-                            <Circle key={ind} {...circlesProps} />
+                    <ul className={`${styles.circlesGrid}`} data-cy="visualization-grid">
+                        {fibCirclesPropsList.map((circlesProps, ind) => (
+                            <li key={ind} data-cy="visualization-element" >
+                                <Circle {...circlesProps} />
+                            </li>
                         ))}
                     </ul>
                 </div>

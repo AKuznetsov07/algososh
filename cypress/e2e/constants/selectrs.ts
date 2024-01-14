@@ -40,3 +40,6 @@ export const circleText = '[data-cy="circle-text"]';
 
 // recursion selectors
 export const reverseButton = '[data-cy="reverse-button"]';
+
+//fibonacci selectors
+export const countButton = '[data-cy="count-button"]';
