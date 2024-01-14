@@ -287,7 +287,7 @@ export const ListPage: React.FC = () => {
     };
   return (
       <SolutionLayout title="Связный список">
-          <div className={`${styles.pageContent}`}>
+          <div className={`${styles.pageContent}`} data-cy="list-page">
               <div className={`${styles.contentColumn}`}>
                   <div>
                       <div className={`${styles.inputRow}`}>

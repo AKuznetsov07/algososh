@@ -63,7 +63,7 @@ export const FibonacciPage: React.FC = () => {
     };
     return (
         <SolutionLayout title="Последовательность Фибоначчи">
-            <div className={`${styles.pageContent}`}>
+            <div className={`${styles.pageContent}`} data-cy="fibonacci-page">
                 <div className={`${styles.contentColumn}`}>
                     <div>
                         <div className={`${styles.inputRow}`}>

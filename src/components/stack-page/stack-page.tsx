@@ -72,7 +72,7 @@ export const StackPage: React.FC = () => {
 
   return (
       <SolutionLayout title="Стек">
-          <div className={`${styles.pageContent}`}>
+          <div className={`${styles.pageContent}`} data-cy="stack-page">
               <div className={`${styles.contentColumn}`}>
                   <div className={`${styles.inputRow}`}>
                       <div className={`${styles.controlsGroup}`}>

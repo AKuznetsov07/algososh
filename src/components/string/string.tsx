@@ -63,7 +63,7 @@ export const StringComponent: React.FC<{ isDebugging?: boolean, defaultString?: 
     }
     return (
         <SolutionLayout title="Строка">
-          <div className={`${styles.pageContent}`}>
+            <div className={`${styles.pageContent}`} data-cy="recursion-page">
               <div className={`${styles.contentColumn}`}>
                   <div>
                       <div className={`${styles.inputRow}`}>

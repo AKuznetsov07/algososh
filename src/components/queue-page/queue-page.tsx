@@ -99,7 +99,7 @@ export const QueuePage: React.FC = () => {
 
   return (
       <SolutionLayout title="Очередь">
-          <div className={`${styles.pageContent}`}>
+          <div className={`${styles.pageContent}`} data-cy="queue-page">
               <div className={`${styles.contentColumn}`}>
                   <div className={`${styles.inputRow}`}>
                       <div className={`${styles.controlsGroup}`}>

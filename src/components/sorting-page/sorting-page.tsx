@@ -224,7 +224,7 @@ export const SortingPage: React.FC<IDefaultState> = ({ isDebugging = false, sort
 
   return (
     <SolutionLayout title="Сортировка массива">
-          <form className={`${styles.pageContent}`}>
+          <form className={`${styles.pageContent}`} data-cy="sorting-page">
               <div className={`${styles.contentColumn}`}>
                   <div className={`${styles.inputRow}`}>
                       <div className={`${styles.controlsPair}`}>
