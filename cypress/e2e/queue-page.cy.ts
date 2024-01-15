@@ -1,4 +1,4 @@
-import { NORMAL_DELAY, addButton, circle, circleHead, circleTail, circleText, clearButton, pageMainInput, queueLink, removeButton, visualizationElement, visualizationGrid } from "./constants/selectrs";
+import { NORMAL_DELAY, addButton, changingStyle, circle, circleHead, circleTail, circleText, clearButton, defaultStyle, pageMainInput, queueLink, removeButton, visualizationElement, visualizationGrid } from "./constants/selectrs";
 
 const inputAmount = Math.floor(Math.random() * 5) + 2;
 describe('service is available', function () {
@@ -20,7 +20,7 @@ describe('service is available', function () {
             //
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === i) {
-                    cy.wrap(element).children('[class*=circle_changing]');
+                    cy.wrap(element).children(changingStyle);
                     //
                 }
             });
@@ -32,7 +32,7 @@ describe('service is available', function () {
                     cy.wrap(element).get(circleHead).should("have.text", "head");
                 }
                 if (index === i) {
-                    cy.wrap(element).children('[class*=circle_default]');
+                    cy.wrap(element).children(defaultStyle);
                     cy.wrap(element).get(circleTail).should("have.text", "tail");
                 }
             });
@@ -53,7 +53,7 @@ describe('service is available', function () {
             //
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === i) {
-                    cy.wrap(element).children('[class*=circle_changing]');
+                    cy.wrap(element).children(changingStyle);
                 }
             });
             cy.wait(NORMAL_DELAY);
@@ -61,7 +61,7 @@ describe('service is available', function () {
 
 
             cy.get(visualizationGrid).find(circle).each((element, index) => {
-                cy.wrap(element).children('[class*=circle_default]');
+                cy.wrap(element).children(defaultStyle);
             });
         }
     });
@@ -75,7 +75,7 @@ describe('service is available', function () {
         cy.get(clearButton).click();
 
         cy.get(visualizationGrid).find(circle).each((element, index) => {
-            cy.wrap(element).children('[class*=circle_default]');
+            cy.wrap(element).children(defaultStyle);
             cy.wrap(element).get(circleHead).should("not.have.text", "head");
             cy.wrap(element).get(circleTail).should("not.have.text", "tail");
             cy.wrap(element).get(circleText).should("not.have.text", index);

@@ -1,4 +1,4 @@
-import { NORMAL_DELAY, circle, circleBorder, circleText, defaultColor, pageMainInput, recursionLink, reverseButton, visualizationElement, visualizationGrid } from "./constants/selectrs";
+import { NORMAL_DELAY, changingStyle, circle, circleBorder, circleText, defaultColor, defaultStyle, modifiedStyle, pageMainInput, recursionLink, reverseButton, visualizationElement, visualizationGrid } from "./constants/selectrs";
 //import circleStyles from "../../src/components/ui/circle/circle.module.css";
 
 const reverseString = '1234567'// <----
@@ -27,7 +27,7 @@ describe('service is available', function () {
             //cy.wrap(element).should('have.class', circleStyles.default)
             //cy.wrap(element).should('have.css', 'border-color', defaultColor).should("have.text", reverseString[index]);
             //cy.wrap(element).get(circleText)
-            cy.wrap(element).children('[class*=circle_default]');
+            cy.wrap(element).children(defaultStyle);
             cy.wrap(element).should("have.text", reverseString[index]);
         });
         cy.wait(NORMAL_DELAY);
@@ -37,13 +37,13 @@ describe('service is available', function () {
 
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === i || index === (reverseString.length - 1 - i)) {
-                    cy.wrap(element).children('[class*=circle_changing]');
+                    cy.wrap(element).children(changingStyle);
                 }
             });
             cy.wait(NORMAL_DELAY);
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === i || index === (reverseString.length - 1 - i)) {
-                    cy.wrap(element).children('[class*=circle_modified]');
+                    cy.wrap(element).children(modifiedStyle);
                 }
             });
 
@@ -51,7 +51,7 @@ describe('service is available', function () {
         if (reverseString.length - 2 * mid) {
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === mid) {
-                    cy.wrap(element).children('[class*=circle_modified]');
+                    cy.wrap(element).children(modifiedStyle);
                 }
             });
         }

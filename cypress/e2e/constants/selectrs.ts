@@ -2,6 +2,10 @@
 export const NORMAL_DELAY: number = 1000;
 export const SMALL_DELAY: number = 500;
 
+export const defaultStyle = '[class*=circle_default]';
+export const changingStyle = '[class*=circle_changing]';
+export const modifiedStyle = '[class*=circle_modified]';
+
 //colors
 export const defaultColor = 'rgb(127, 224, 81)';//'#0032ff';
 export const changingColor = 'd252e1';
@@ -49,4 +53,13 @@ export const countButton = '[data-cy="count-button"]';
 export const addButton = '[data-cy="add-button"]';
 export const removeButton = '[data-cy="remove-button"]';
 export const clearButton = '[data-cy="clear-button"]';
+
+//list page
+export const indexInput = '[data-cy="index-input"]';
+export const addHeadButton = '[data-cy="add-head-button"]';
+export const addTailButton = '[data-cy="add-tail-button"]';
+export const addIndexButton = '[data-cy="add-index-button"]';
+export const removeHeadButton = '[data-cy="remove-head-button"]';
+export const removeTailButton = '[data-cy="remove-tail-button"]';
+export const removeIndexButton = '[data-cy="remove-index-button"]';
 

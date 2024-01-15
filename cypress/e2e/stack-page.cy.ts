@@ -1,4 +1,4 @@
-import { NORMAL_DELAY, addButton, circle, clearButton, pageMainInput, removeButton, stackLink, visualizationElement, visualizationGrid } from "./constants/selectrs";
+import { NORMAL_DELAY, addButton, changingStyle, circle, clearButton, defaultStyle, pageMainInput, removeButton, stackLink, visualizationElement, visualizationGrid } from "./constants/selectrs";
 
 const inputAmount = Math.floor(Math.random() * 4) + 2;
 describe('service is available', function () {
@@ -20,14 +20,14 @@ describe('service is available', function () {
             //
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === i ) {
-                    cy.wrap(element).children('[class*=circle_changing]');
+                    cy.wrap(element).children(changingStyle);
                 }
             });
             cy.wait(NORMAL_DELAY);
             //
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === i) {
-                    cy.wrap(element).children('[class*=circle_default]');
+                    cy.wrap(element).children(defaultStyle);
                 }
             });
         }
@@ -47,7 +47,7 @@ describe('service is available', function () {
             //
             cy.get(visualizationGrid).find(circle).each((element, index) => {
                 if (index === i) {
-                    cy.wrap(element).children('[class*=circle_changing]');
+                    cy.wrap(element).children(changingStyle);
                 }
             });
             cy.wait(NORMAL_DELAY);
@@ -56,7 +56,7 @@ describe('service is available', function () {
             cy.get(visualizationGrid).find(visualizationElement).should('have.length', i);
             if (i > 0) {
                 cy.get(visualizationGrid).find(circle).each((element, index) => {
-                    cy.wrap(element).children('[class*=circle_default]');
+                    cy.wrap(element).children(defaultStyle);
                 });
             }
         }
