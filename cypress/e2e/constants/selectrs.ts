@@ -36,6 +36,8 @@ export const visualizationElement = '[data-cy="visualization-element"]';
 export const circle = '[data-cy="circle"]';
 export const circleBorder = '[data-cy="circle-border"]';
 export const circleText = '[data-cy="circle-text"]';
+export const circleHead = '[data-cy="circle-head"]';
+export const circleTail = '[data-cy="circle-tail"]';
 
 // recursion selectors
 export const reverseButton = '[data-cy="reverse-button"]';
@@ -43,7 +45,7 @@ export const reverseButton = '[data-cy="reverse-button"]';
 //fibonacci selectors
 export const countButton = '[data-cy="count-button"]';
 
-//stack selectors
+//stack/queue selectors
 export const addButton = '[data-cy="add-button"]';
 export const removeButton = '[data-cy="remove-button"]';
 export const clearButton = '[data-cy="clear-button"]';

@@ -68,6 +68,8 @@ export class Queue<T> {
             return null;
         }
         else {
+            console.log("tail")
+            console.log(this._tail - 1)
             return this._tail - 1;
         }
     }
